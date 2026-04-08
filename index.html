@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>SWAC | Sistema Web de Atención al Cliente - 105RM</title>
+    <title>SWAC + PBX | Sistema Integral de Atención al Cliente</title>
     <!-- FAVICON -->
     <link rel="icon" type="image/jpeg" href="https://i.pinimg.com/736x/9b/a9/5a/9ba95a07aeaf32052a9e770f3128705d.jpg">
     <link rel="shortcut icon" type="image/jpeg" href="https://i.pinimg.com/736x/9b/a9/5a/9ba95a07aeaf32052a9e770f3128705d.jpg">
@@ -12,7 +12,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { font-family: 'Inter', sans-serif; }
-        body { background: #F0F4F9; }
+        body { margin: 0; padding: 0; overflow: hidden; background: #F0F4F9; }
+        .split-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .panel-left {
+            width: 45%;
+            overflow-y: auto;
+            background: #F0F4F9;
+            border-right: 2px solid #cbd5e1;
+            padding: 16px;
+        }
+        .panel-right {
+            width: 55%;
+            overflow: hidden;
+            background: #1e293b;
+        }
+        .panel-right iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
         .highlight-variable {
             background-color: #FEF08A;
             color: #1E293B;
@@ -48,77 +71,33 @@
             50% { transform: scale(1.02); opacity: 0.9; }
             100% { transform: scale(1); opacity: 1; }
         }
-        .timer-large {
-            animation: pulse 2s infinite;
-        }
+        .timer-large { animation: pulse 2s infinite; }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .motivational-banner {
-            animation: fadeInUp 0.5s ease-out;
-        }
-        .logo-img {
-            object-fit: contain;
-            width: 100%;
-            height: 100%;
-        }
-        .comments-section {
-            background: #f8fafc;
-            border-radius: 1rem;
-            transition: all 0.3s ease;
-        }
-        .comments-section:focus-within {
-            box-shadow: 0 0 0 2px #005fb2;
-        }
-        .timer-card {
-            transition: all 0.3s ease;
-        }
-        .timer-card:hover {
-            transform: translateY(-2px);
-        }
-        .alerta-break {
-            animation: alertaPulse 0.5s infinite;
-        }
+        .motivational-banner { animation: fadeInUp 0.5s ease-out; }
+        .logo-img { object-fit: contain; width: 100%; height: 100%; }
+        .comments-section { background: #f8fafc; border-radius: 1rem; transition: all 0.3s ease; }
+        .comments-section:focus-within { box-shadow: 0 0 0 2px #005fb2; }
+        .timer-card { transition: all 0.3s ease; }
+        .timer-card:hover { transform: translateY(-2px); }
+        .alerta-break { animation: alertaPulse 0.5s infinite; }
         @keyframes alertaPulse {
             0% { background-color: #ef4444; }
             50% { background-color: #dc2626; }
             100% { background-color: #ef4444; }
         }
-        .counter-card {
-            background: linear-gradient(135deg, #005fb2 0%, #004a8f 100%);
-            transition: all 0.3s ease;
-        }
-        .counter-card:hover {
-            transform: scale(1.02);
-        }
-        .numeros-card {
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .numeros-card:hover {
-            transform: translateY(-2px);
-        }
-        .numero-item {
-            transition: all 0.2s ease;
-        }
-        .numero-item:hover {
-            background-color: rgba(255,255,255,0.3);
-            transform: translateX(5px);
-        }
-        .resumen-btn {
-            transition: all 0.3s ease;
-        }
-        .resumen-btn:hover {
-            transform: scale(1.02);
-        }
-        .btn-numeros {
-            transition: all 0.3s ease;
-        }
-        .btn-numeros:hover {
-            transform: scale(1.02);
-        }
+        .counter-card { background: linear-gradient(135deg, #005fb2 0%, #004a8f 100%); transition: all 0.3s ease; }
+        .counter-card:hover { transform: scale(1.02); }
+        .numeros-card { background: linear-gradient(135deg, #10B981 0%, #059669 100%); transition: all 0.3s ease; cursor: pointer; }
+        .numeros-card:hover { transform: translateY(-2px); }
+        .numero-item { transition: all 0.2s ease; }
+        .numero-item:hover { background-color: rgba(255,255,255,0.3); transform: translateX(5px); }
+        .resumen-btn { transition: all 0.3s ease; }
+        .resumen-btn:hover { transform: scale(1.02); }
+        .btn-numeros { transition: all 0.3s ease; }
+        .btn-numeros:hover { transform: scale(1.02); }
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -158,10 +137,7 @@
             border-right: 12px solid transparent;
             border-bottom: 12px solid #005fb2;
         }
-        .numeros-lista {
-            max-height: 200px;
-            overflow-y: auto;
-        }
+        .numeros-lista { max-height: 200px; overflow-y: auto; }
         .resumen-modal {
             position: fixed;
             top: 0;
@@ -245,200 +221,170 @@
             padding: 0.5rem;
             border-radius: 1rem;
         }
-        .promocion-select {
-            transition: all 0.3s ease;
-        }
-        .promocion-select:hover {
-            transform: scale(1.02);
+        .telegram-input { transition: all 0.3s ease; }
+        .telegram-input:focus { box-shadow: 0 0 0 2px #0088cc; }
+        @media (max-width: 768px) {
+            .split-container { flex-direction: column; }
+            .panel-left, .panel-right { width: 100%; height: 50vh; }
+            .panel-left { border-right: none; border-bottom: 2px solid #cbd5e1; }
+            body { overflow-y: auto; }
         }
     </style>
 </head>
-<body class="p-4 md:p-6">
-
-    <div class="max-w-[1600px] mx-auto">
-        <!-- ENCABEZADO CON LOGO Y NOMBRE SWAC -->
-        <div class="flex flex-wrap justify-between items-center mb-6 gap-3 bg-white rounded-2xl shadow-md p-4 border border-gray-100">
-            <div class="flex items-center gap-4">
-                <div id="logoContainer" class="w-16 h-16 bg-[#005fb2]/10 rounded-xl flex items-center justify-center overflow-hidden shadow-sm border border-gray-200">
-                    <img src="https://i.pinimg.com/736x/9b/a9/5a/9ba95a07aeaf32052a9e770f3128705d.jpg" alt="Logo SWAC" class="logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-headset text-3xl text-[#005fb2]\'></i>';">
+<body>
+    <div class="split-container">
+        <!-- PANEL IZQUIERDO: SWAC -->
+        <div class="panel-left scrollbar-thin">
+            <div class="flex flex-wrap justify-between items-center mb-4 gap-2 bg-white rounded-2xl shadow-md p-3 border border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-[#005fb2]/10 rounded-xl flex items-center justify-center overflow-hidden shadow-sm border border-gray-200">
+                        <img src="https://i.pinimg.com/736x/9b/a9/5a/9ba95a07aeaf32052a9e770f3128705d.jpg" alt="Logo SWAC" class="logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-headset text-2xl text-[#005fb2]\'></i>';">
+                    </div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold text-[#005fb2]">📋 SWAC</h1>
+                        <p class="text-gray-500 text-xs">Sistema Web de Atención al Cliente - 105RM</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-[#005fb2]">📋 SWAC</h1>
-                    <p class="text-gray-500 text-sm">Sistema Web de Atención al Cliente - 105RM Promotor Autorizado Infinitum</p>
+                <div class="bg-[#005fb2]/10 px-3 py-1 rounded-full text-xs font-medium border border-[#005fb2]/30">
+                    <i class="fas fa-stopwatch text-[#005fb2] mr-1"></i> Tiempos
                 </div>
             </div>
-            <div class="flex gap-2">
-                <div class="bg-[#005fb2]/10 px-4 py-2 rounded-full shadow-sm text-xs font-medium border border-[#005fb2]/30">
-                    <i class="fas fa-stopwatch text-[#005fb2] mr-1"></i> Control de tiempo
+
+            <!-- USUARIO DE TELEGRAM -->
+            <div class="bg-gradient-to-r from-[#0088cc] to-[#005fb2] rounded-xl shadow-lg mb-4 overflow-hidden">
+                <div class="px-4 py-2 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <div class="bg-white/20 rounded-full p-1.5"><i class="fab fa-telegram text-white text-sm"></i></div>
+                        <div><p class="text-white/80 text-[10px] font-medium">USUARIO DE TELEGRAM</p><p class="text-white text-xs">Mensajes a este usuario</p></div>
+                    </div>
+                    <div class="flex-1 max-w-[180px] ml-2">
+                        <input type="text" id="usuarioTelegram" class="w-full border border-white/30 bg-white/20 text-white placeholder-white/70 rounded-lg p-1 text-xs" placeholder="@usuario" value="@liscl_bot">
+                    </div>
                 </div>
-                <button id="btnAbrirDialer" class="bg-[#005fb2] hover:bg-[#004a8f] text-white px-4 py-2 rounded-full shadow-sm text-xs font-medium transition flex items-center gap-2">
-                    <i class="fas fa-phone"></i> Abrir Marcador
+            </div>
+
+            <!-- CONTADOR DE LLAMADAS -->
+            <div class="counter-card rounded-xl shadow-lg mb-4 overflow-hidden">
+                <div class="px-4 py-2 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <div class="bg-white/20 rounded-full p-1.5"><i class="fas fa-phone-volume text-white text-sm"></i></div>
+                        <div><p class="text-white/70 text-[10px] font-medium">LLAMADAS</p><p class="text-white text-xl font-bold" id="contadorLlamadas">0</p></div>
+                    </div>
+                    <div class="text-white/60 text-[10px] hidden md:block">Total sesión</div>
+                </div>
+            </div>
+
+            <!-- RESUMEN DE ACTIVIDAD -->
+            <div class="mb-4">
+                <button id="btnResumenActividad" class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white font-bold py-2 px-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fas fa-chart-bar"></i> 📊 RESUMEN DE ACTIVIDAD <i class="fab fa-whatsapp"></i>
                 </button>
             </div>
-        </div>
 
-        <!-- CONTADOR DE LLAMADAS PROCESADAS -->
-        <div class="counter-card rounded-xl shadow-lg mb-6 overflow-hidden">
-            <div class="px-6 py-4 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="bg-white/20 rounded-full p-3">
-                        <i class="fas fa-phone-volume text-white text-2xl"></i>
+            <!-- TIEMPOS CONEXIÓN y BREAK -->
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="timer-card bg-gradient-to-r from-green-600 to-green-700 rounded-xl shadow-lg overflow-hidden">
+                    <div class="px-2 py-1.5 bg-green-800/50 flex justify-between items-center">
+                        <span class="text-white font-bold text-[10px] flex items-center gap-1"><i class="fas fa-plug"></i> CONEXIÓN</span>
+                        <div class="flex gap-1">
+                            <button id="btnIniciarConexion" class="bg-green-500 hover:bg-green-400 text-white text-[10px] px-1.5 py-0.5 rounded"><i class="fas fa-play"></i></button>
+                            <button id="btnDetenerConexion" class="bg-red-500 hover:bg-red-400 text-white text-[10px] px-1.5 py-0.5 rounded"><i class="fas fa-stop"></i></button>
+                            <button id="btnResetConexion" class="bg-gray-500 hover:bg-gray-400 text-white text-[10px] px-1.5 py-0.5 rounded"><i class="fas fa-undo"></i></button>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-white/80 text-xs font-medium">LLAMADAS PROCESADAS</p>
-                        <p class="text-white text-3xl font-bold" id="contadorLlamadas">0</p>
-                    </div>
+                    <div class="p-1 text-center"><div class="text-lg font-mono font-bold text-white" id="timerConexion">00:00:00</div></div>
                 </div>
-                <div class="text-white/70 text-sm hidden md:block">
-                    <i class="fas fa-chart-line mr-1"></i> Total en esta sesión
+                <div class="timer-card bg-gradient-to-r from-orange-600 to-orange-700 rounded-xl shadow-lg overflow-hidden" id="breakCard">
+                    <div class="px-2 py-1.5 bg-orange-800/50 flex justify-between items-center">
+                        <span class="text-white font-bold text-[10px] flex items-center gap-1"><i class="fas fa-coffee"></i> BREAK</span>
+                        <div class="flex gap-1">
+                            <button id="btnIniciarBreak" class="bg-orange-500 hover:bg-orange-400 text-white text-[10px] px-1.5 py-0.5 rounded"><i class="fas fa-play"></i></button>
+                            <button id="btnDetenerBreak" class="bg-red-500 hover:bg-red-400 text-white text-[10px] px-1.5 py-0.5 rounded"><i class="fas fa-stop"></i></button>
+                            <button id="btnResetBreak" class="bg-gray-500 hover:bg-gray-400 text-white text-[10px] px-1.5 py-0.5 rounded"><i class="fas fa-undo"></i></button>
+                        </div>
+                    </div>
+                    <div class="p-1 text-center"><div class="text-lg font-mono font-bold text-white" id="timerBreak">30:00</div></div>
                 </div>
             </div>
-        </div>
 
-        <!-- BOTÓN DE RESUMEN DE ACTIVIDAD -->
-        <div class="mb-6">
-            <button id="btnResumenActividad" class="resumen-btn w-full bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition flex items-center justify-center gap-3 text-lg">
-                <i class="fas fa-chart-bar text-xl"></i>
-                📊 RESUMEN DE ACTIVIDAD
-                <i class="fas fa-whatsapp text-xl"></i>
-            </button>
-            <p class="text-xs text-gray-500 text-center mt-2">
-                <i class="fas fa-info-circle"></i> Genera resumen de tu jornada y envíalo por WhatsApp
-            </p>
-        </div>
+            <!-- NÚMEROS A LLAMAR -->
+            <div id="numerosExtraidosPanel" class="hidden mb-3 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
+                <div class="bg-gray-100 px-3 py-1.5 font-semibold text-gray-700 text-xs flex justify-between items-center">
+                    <span><i class="fas fa-list mr-1"></i> Números detectados</span>
+                    <button id="btnCopiarTodosNumerosPanel" class="text-[10px] bg-[#005fb2] text-white px-2 py-0.5 rounded">Copiar todos</button>
+                </div>
+                <div id="listaNumerosExtraidos" class="p-2 numeros-lista space-y-1 max-h-24 overflow-y-auto"></div>
+                <div class="bg-gray-100 px-3 py-1 text-[10px] text-gray-500 text-center">Clic en número → copiar + abrir marcador</div>
+            </div>
 
-        <!-- PANEL DE TIEMPOS (CONEXIÓN y BREAK) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div class="timer-card bg-gradient-to-r from-green-600 to-green-700 rounded-xl shadow-lg overflow-hidden">
-                <div class="px-5 py-3 bg-green-800/50 flex justify-between items-center">
-                    <span class="text-white font-bold flex items-center gap-2"><i class="fas fa-plug"></i> TIEMPO DE CONEXIÓN</span>
+            <!-- BANNER MOTIVACIONAL -->
+            <div id="motivationalBanner" class="hidden mb-3 bg-gradient-to-r from-[#005fb2] to-[#004a8f] rounded-xl shadow-lg overflow-hidden">
+                <div class="px-3 py-2"><p id="fraseMotivacional" class="text-white font-medium text-xs">✨ ¡Tú puedes! Cada llamada es una oportunidad ✨</p></div>
+            </div>
+
+            <!-- DATOS DEL EJECUTIVO -->
+            <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden mb-3">
+                <div class="bg-[#005fb2] px-3 py-1.5 text-white font-semibold text-xs flex items-center gap-2">
+                    <i class="fas fa-user-check"></i> Datos de la venta
+                </div>
+                <div class="p-3 space-y-2">
+                    <div class="bg-blue-50 p-2 rounded-lg">
+                        <label class="block text-xs font-bold text-[#005fb2] mb-1">DATOS DEL EJECUTIVO</label>
+                        <input type="text" id="nombreEjecutivo" class="w-full border border-gray-300 rounded-lg p-1.5 text-xs" value="MARIA DEL CARMEN VARGAS BERMEJO">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Ficha del cliente</label>
+                        <textarea id="inputData" rows="4" class="w-full border border-gray-300 rounded-xl p-2 font-mono text-xs bg-gray-50"></textarea>
+                        <p class="text-[10px] text-gray-400 mt-1">Indica la elección del cliente: "eligió Netflix", "eligió HBO", "Netflix", "HBO+"</p>
+                    </div>
                     <div class="flex gap-2">
-                        <button id="btnIniciarConexion" class="bg-green-500 hover:bg-green-400 text-white text-xs px-3 py-1 rounded-lg transition"><i class="fas fa-play"></i> Iniciar</button>
-                        <button id="btnDetenerConexion" class="bg-red-500 hover:bg-red-400 text-white text-xs px-3 py-1 rounded-lg transition"><i class="fas fa-stop"></i> Detener</button>
-                        <button id="btnResetConexion" class="bg-gray-500 hover:bg-gray-400 text-white text-xs px-3 py-1 rounded-lg transition"><i class="fas fa-undo"></i> Reset</button>
+                        <button id="btnMostrarNumeros" class="bg-green-500 hover:bg-green-600 text-white text-xs py-1.5 px-3 rounded-xl flex items-center gap-1"><i class="fas fa-phone-alt"></i> 📞 Números</button>
+                        <button id="generateBtn" class="bg-[#005fb2] hover:bg-[#004a8f] text-white text-xs py-1.5 px-3 rounded-xl flex items-center gap-1"><i class="fas fa-microphone-alt"></i> Generar</button>
+                        <button id="resetBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs py-1.5 px-3 rounded-xl"><i class="fas fa-eraser"></i> Limpiar</button>
                     </div>
                 </div>
-                <div class="p-4 text-center">
-                    <div class="text-4xl md:text-5xl font-mono font-bold text-white" id="timerConexion">00:00:00</div>
-                </div>
             </div>
-            <div class="timer-card bg-gradient-to-r from-orange-600 to-orange-700 rounded-xl shadow-lg overflow-hidden" id="breakCard">
-                <div class="px-5 py-3 bg-orange-800/50 flex justify-between items-center">
-                    <span class="text-white font-bold flex items-center gap-2"><i class="fas fa-coffee"></i> TIEMPO DE BREAK</span>
+
+            <!-- GUION COMPLETO -->
+            <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden mb-3">
+                <div class="bg-gray-800 px-3 py-1.5 text-white font-semibold text-xs flex justify-between items-center">
+                    <span><i class="fas fa-clipboard-list mr-1"></i> Guion completo</span>
+                    <button id="copyScriptBtn" class="bg-white/20 hover:bg-white/30 text-white text-[10px] px-2 py-0.5 rounded"><i class="fas fa-copy"></i> Copiar</button>
+                </div>
+                <div class="bg-gradient-to-r from-gray-900 to-gray-800 px-3 py-1.5 flex justify-between items-center">
                     <div class="flex gap-2">
-                        <button id="btnIniciarBreak" class="bg-orange-500 hover:bg-orange-400 text-white text-xs px-3 py-1 rounded-lg transition"><i class="fas fa-play"></i> Iniciar</button>
-                        <button id="btnDetenerBreak" class="bg-red-500 hover:bg-red-400 text-white text-xs px-3 py-1 rounded-lg transition"><i class="fas fa-stop"></i> Detener</button>
-                        <button id="btnResetBreak" class="bg-gray-500 hover:bg-gray-400 text-white text-xs px-3 py-1 rounded-lg transition"><i class="fas fa-undo"></i> Reset</button>
+                        <button id="btnIniciarLlamada" class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-xl text-xs"><i class="fas fa-phone-alt"></i> INICIAR</button>
+                        <button id="btnDetenerLlamada" class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-xl text-xs opacity-50 cursor-not-allowed" disabled><i class="fas fa-stop"></i> DETENER</button>
+                    </div>
+                    <div class="bg-black rounded-xl px-2 py-0.5 text-center">
+                        <span class="text-gray-400 text-[8px]">TIEMPO</span>
+                        <div class="text-lg font-mono font-bold text-green-400" id="timerDisplay">00:00</div>
                     </div>
                 </div>
-                <div class="p-4 text-center">
-                    <div class="text-4xl md:text-5xl font-mono font-bold text-white" id="timerBreak">30:00</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- BANNER DE FRASES MOTIVACIONALES -->
-        <div id="motivationalBanner" class="hidden mb-4 bg-gradient-to-r from-[#005fb2] to-[#004a8f] rounded-xl shadow-lg overflow-hidden">
-            <div class="px-6 py-4 flex items-center gap-4">
-                <div class="text-white text-3xl"><i class="fas fa-star-of-life"></i></div>
-                <div class="flex-1">
-                    <p id="fraseMotivacional" class="text-white font-medium text-lg md:text-xl">✨ ¡Tú puedes! Cada llamada es una oportunidad para ayudar ✨</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- PANEL IZQUIERDO -->
-            <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden flex flex-col">
-                <div class="bg-[#005fb2] px-5 py-3 text-white font-semibold flex items-center gap-2">
-                    <i class="fas fa-user-check"></i> <span>📋 Datos de la venta</span>
-                </div>
-                <div class="p-5 flex-1 space-y-4">
-                    <div class="bg-blue-50 p-3 rounded-xl border border-blue-200">
-                        <label class="block text-sm font-bold text-[#005fb2] mb-2">
-                            <i class="fas fa-id-card mr-1"></i> DATOS DEL EJECUTIVO
-                        </label>
-                        <input type="text" id="nombreEjecutivo" class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-[#005fb2]" value="MARIA DEL CARMEN VARGAS BERMEJO">
-                        <p class="text-xs text-gray-400 mt-1">El sistema detecta si el paquete incluye línea telefónica (Internet + Línea) o solo Internet</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Ficha del cliente (texto libre)</label>
-                        <textarea id="inputData" rows="6" class="w-full border border-gray-300 rounded-xl p-4 font-mono text-sm bg-gray-50 focus:ring-2 focus:ring-[#005fb2]"></textarea>
-                        <p class="text-xs text-gray-400 mt-1">Indica si el paquete incluye línea telefónica: "con línea", "más línea", "telefonía", o "solo internet"</p>
-                    </div>
-                    
-                    <!-- BOTÓN NÚMEROS A LLAMAR -->
-                    <div>
-                        <button id="btnMostrarNumeros" class="btn-numeros w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 shadow-md">
-                            <i class="fas fa-phone-alt text-lg"></i>
-                            📞 NÚMEROS A LLAMAR
-                            <i class="fas fa-chevron-down text-sm"></i>
-                        </button>
-                    </div>
-                    
-                    <!-- Panel para mostrar números extraídos -->
-                    <div id="numerosExtraidosPanel" class="hidden mt-2 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
-                        <div class="bg-gray-100 px-4 py-2 font-semibold text-gray-700 text-sm flex justify-between items-center">
-                            <span><i class="fas fa-list mr-2"></i> Números detectados</span>
-                            <button id="btnCopiarTodosNumerosPanel" class="text-xs bg-[#005fb2] text-white px-2 py-1 rounded hover:bg-[#004a8f] transition">
-                                <i class="fas fa-copy"></i> Copiar todos
-                            </button>
-                        </div>
-                        <div id="listaNumerosExtraidos" class="p-3 numeros-lista space-y-2">
-                            <p class="text-gray-400 text-center text-sm">No hay números detectados aún</p>
-                        </div>
-                        <div class="bg-gray-100 px-4 py-2 text-xs text-gray-500 text-center">
-                            <i class="fas fa-info-circle"></i> Haz clic en cualquier número para copiarlo y abrir el marcador
-                        </div>
-                    </div>
-                    
-                    <div class="flex flex-wrap gap-3 justify-between items-center pt-2">
-                        <button id="generateBtn" class="bg-[#005fb2] hover:bg-[#004a8f] text-white font-semibold py-2.5 px-6 rounded-xl shadow-md transition flex items-center gap-2"><i class="fas fa-microphone-alt"></i> Generar Guion</button>
-                        <button id="resetBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 px-5 rounded-xl transition text-sm"><i class="fas fa-eraser"></i> Limpiar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PANEL DERECHO -->
-            <div class="bg-white rounded-2xl shadow-md border border-gray-200 flex flex-col h-full">
-                <div class="bg-gray-800 px-5 py-3 text-white font-semibold flex justify-between items-center rounded-t-2xl">
-                    <span><i class="fas fa-clipboard-list mr-2"></i> Guion completo</span>
-                    <button id="copyScriptBtn" class="btn-copy bg-white/20 hover:bg-white/30 text-white text-sm px-3 py-1 rounded-lg transition"><i class="fas fa-copy"></i> Copiar</button>
-                </div>
-                
-                <div class="bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 flex justify-between items-center border-b border-gray-700">
-                    <div class="flex items-center gap-4">
-                        <button id="btnIniciarLlamada" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition flex items-center gap-2 shadow-lg text-lg">
-                            <i class="fas fa-phone-alt"></i> INICIO DE LLAMADA
-                        </button>
-                        <button id="btnDetenerLlamada" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl transition text-lg opacity-50 cursor-not-allowed" disabled>
-                            <i class="fas fa-stop"></i> DETENER
-                        </button>
-                    </div>
-                    <div class="bg-black rounded-2xl px-6 py-3 shadow-inner text-center">
-                        <span class="text-gray-400 text-xs font-mono">TIEMPO DE LLAMADA</span>
-                        <div class="text-4xl md:text-5xl font-mono font-bold text-green-400 timer-large" id="timerDisplay">00:00</div>
-                    </div>
-                </div>
-                
-                <div id="scriptOutputContainer" class="p-5 overflow-y-auto max-h-[35vh] scrollbar-thin">
-                    <div id="scriptPlaceholder" class="text-gray-400 text-center py-12">
-                        <i class="fas fa-file-signature text-3xl opacity-40"></i>
-                        <p class="mt-2">Genera el guion para verlo aquí</p>
+                <div id="scriptOutputContainer" class="p-2 overflow-y-auto max-h-[25vh] scrollbar-thin">
+                    <div id="scriptPlaceholder" class="text-gray-400 text-center py-4 text-xs">
+                        <i class="fas fa-file-signature text-xl opacity-40"></i>
+                        <p>Genera el guion aquí</p>
                     </div>
                     <div id="scriptDynamicContent" class="hidden"></div>
                 </div>
+            </div>
 
-                <div class="border-t border-gray-200 p-4 bg-gray-50 rounded-b-2xl">
-                    <div class="comments-section p-3 bg-white rounded-xl shadow-sm">
-                        <label class="block text-sm font-bold text-[#005fb2] mb-2"><i class="fas fa-comment-dots"></i> COMENTARIOS</label>
-                        <textarea id="comentarios" rows="2" class="w-full border border-gray-300 rounded-lg p-2 text-sm" placeholder="Comentarios de la llamada..."></textarea>
-                        <div class="flex justify-end mt-2">
-                            <button id="btnCopiarComentario" class="bg-[#005fb2] hover:bg-[#004a8f] text-white py-1.5 px-3 rounded-xl text-xs"><i class="fas fa-copy"></i> Copiar a Telegram</button>
-                        </div>
+            <!-- COMENTARIOS -->
+            <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 p-2">
+                    <label class="block text-xs font-bold text-[#005fb2] mb-1"><i class="fas fa-comment-dots"></i> COMENTARIOS</label>
+                    <textarea id="comentarios" rows="2" class="w-full border border-gray-300 rounded-lg p-2 text-xs"></textarea>
+                    <div class="flex justify-end mt-1">
+                        <button id="btnCopiarComentario" class="bg-[#005fb2] hover:bg-[#004a8f] text-white py-1 px-3 rounded-xl text-[10px]"><i class="fas fa-copy"></i> Copiar a Telegram</button>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- PANEL DERECHO: MARCADOR TELEFÓNICO (PBX) -->
+        <div class="panel-right">
+            <iframe src="http://pbx18468.pbxhosting.com.mx/agent_portal/dialer.php" title="Marcador Telefónico - PBX"></iframe>
         </div>
     </div>
 
@@ -449,12 +395,12 @@
         let currentData = null;
         let currentEjecutivo = "";
         let contadorLlamadas = 0;
+        
         let timerConexionInterval = null, timerConexionSegundos = 0, isConexionRunning = false;
         let timerBreakInterval = null, timerBreakSegundos = 1800, isBreakRunning = false, alertaBreakActivada = false;
         let timerAtencionInterval = null, timerAtencionSegundos = 0, isAtencionRunning = false;
         let fraseInterval = null, currentFraseIndex = 0;
-        let breakModalAbierto = false;
-        let breakModal = null;
+        let breakModalAbierto = false, breakModal = null;
         
         const frasesMotivacionales = [
             "✨ ¡Tú puedes! Cada llamada es una oportunidad para ayudar ✨",
@@ -465,42 +411,35 @@
             "🏆 Cada paso te acerca al éxito 🏆"
         ];
         
-        // ========== FUNCIONES DEL TIMER DE ATENCIÓN (TMO) ==========
-        function iniciarTimerAtencion() {
-            if (timerAtencionInterval) clearInterval(timerAtencionInterval);
-            isAtencionRunning = true;
-            timerAtencionInterval = setInterval(() => {
-                if (isAtencionRunning) {
-                    timerAtencionSegundos++;
-                    actualizarDisplayAtencion();
-                }
-            }, 1000);
+        function enviarATelegram(mensaje) {
+            let usuario = document.getElementById('usuarioTelegram').value.trim();
+            if (!usuario) usuario = "@liscl_bot";
+            let limpio = usuario.startsWith('@') ? usuario.substring(1) : usuario;
+            window.open(`https://t.me/${limpio}`, '_blank');
+            return true;
         }
         
-        function detenerTimerAtencion() {
-            if (timerAtencionInterval) {
-                clearInterval(timerAtencionInterval);
-                timerAtencionInterval = null;
+        // ========== DETECTAR ELECCIÓN DEL CLIENTE (Netflix o HBO+) ==========
+        function detectarEleccionCliente(rawText) {
+            const lower = rawText.toLowerCase();
+            if (lower.includes('netflix') || lower.includes('eligió netflix') || lower.includes('seleccionó netflix')) {
+                return 'netflix';
             }
-            isAtencionRunning = false;
-        }
-        
-        function resetearTimerAtencion() {
-            detenerTimerAtencion();
-            timerAtencionSegundos = 0;
-            actualizarDisplayAtencion();
-        }
-        
-        function actualizarDisplayAtencion() {
-            const minutos = Math.floor(timerAtencionSegundos / 60);
-            const segundos = timerAtencionSegundos % 60;
-            const display = document.getElementById('timerDisplay');
-            if (display) {
-                display.textContent = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+            if (lower.includes('hbo') || lower.includes('hbo+') || lower.includes('eligió hbo') || lower.includes('seleccionó hbo')) {
+                return 'hbo';
             }
+            return null; // Sin elección específica
         }
         
-        // ========== FUNCIONES DE TIMERS DE CONEXIÓN Y BREAK ==========
+        // ========== DETECTAR SI EL PAQUETE INCLUYE LÍNEA TELEFÓNICA ==========
+        function detectarTieneLinea(rawText) {
+            const lower = rawText.toLowerCase();
+            if (lower.includes('solo internet') || lower.includes('internet solamente') || lower.includes('solo datos')) return false;
+            if (lower.includes('línea') || lower.includes('linea') || lower.includes('telefonía') || lower.includes('llamadas')) return true;
+            return true;
+        }
+        
+        // ========== TIMERS ==========
         function actualizarDisplayConexion() {
             const h = Math.floor(timerConexionSegundos / 3600);
             const m = Math.floor((timerConexionSegundos % 3600) / 60);
@@ -528,6 +467,7 @@
                 if (breakModal) breakModal.remove();
                 breakModalAbierto = false;
                 alert('⏰ ¡BREAK FINALIZADO! Conéctate.');
+                if (!isConexionRunning && timerConexionInterval === null) iniciarTimerConexion();
             }
         }
         
@@ -540,18 +480,14 @@
             breakModal.className = 'break-modal';
             breakModal.innerHTML = `
                 <div class="break-content">
-                    <div class="break-image">
-                        <i class="fas fa-bed fa-4x text-blue-500"></i>
-                    </div>
+                    <div class="break-image"><i class="fas fa-bed fa-4x text-blue-500"></i></div>
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">☕ Tiempo de Descanso</h2>
-                    <p class="text-gray-600 mb-4">Tómate un momento para relajarte y recargar energías</p>
+                    <p class="text-gray-600 mb-4">Tómate un momento para relajarte</p>
                     <div class="bg-blue-100 rounded-lg p-3 mb-4">
-                        <p class="text-blue-600 font-medium">⏱️ Tiempo restante de break:</p>
+                        <p class="text-blue-600 font-medium">⏱️ Tiempo restante:</p>
                         <div class="break-timer text-4xl font-mono font-bold text-blue-700 my-2" id="breakTimerDisplay">${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}</div>
                     </div>
-                    <button id="btnFinalizarBreak" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-xl transition w-full">
-                        <i class="fas fa-check-circle mr-2"></i> Finalizar Break
-                    </button>
+                    <button id="btnFinalizarBreak" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-xl w-full">Finalizar Break</button>
                 </div>
             `;
             document.body.appendChild(breakModal);
@@ -560,40 +496,29 @@
                 if (breakModal) breakModal.remove();
                 breakModalAbierto = false;
                 breakModal = null;
+                if (!isConexionRunning && timerConexionInterval === null) iniciarTimerConexion();
             });
         }
         
-        function iniciarTimerBreak() { 
+        function iniciarTimerBreak() {
             if (timerBreakInterval) clearInterval(timerBreakInterval);
             isBreakRunning = true;
             alertaBreakActivada = false;
             document.getElementById('breakCard').classList.remove('alerta-break');
+            if (isConexionRunning) detenerTimerConexion();
             mostrarBreakModal();
             timerBreakInterval = setInterval(() => {
-                if (isBreakRunning && timerBreakSegundos > 0) {
-                    timerBreakSegundos--;
-                    actualizarDisplayBreak();
-                } else if (timerBreakSegundos <= 0) {
-                    detenerTimerBreak();
-                }
+                if (isBreakRunning && timerBreakSegundos > 0) { timerBreakSegundos--; actualizarDisplayBreak(); }
+                else if (timerBreakSegundos <= 0) detenerTimerBreak();
             }, 1000);
         }
         
-        function detenerTimerBreak() {
-            if (timerBreakInterval) {
-                clearInterval(timerBreakInterval);
-                timerBreakInterval = null;
-            }
-            isBreakRunning = false;
-        }
+        function detenerTimerBreak() { if (timerBreakInterval) { clearInterval(timerBreakInterval); timerBreakInterval = null; } isBreakRunning = false; }
+        function resetearTimerBreak() { detenerTimerBreak(); timerBreakSegundos = 1800; alertaBreakActivada = false; document.getElementById('breakCard').classList.remove('alerta-break'); actualizarDisplayBreak(); }
         
-        function resetearTimerBreak() {
-            detenerTimerBreak();
-            timerBreakSegundos = 1800;
-            alertaBreakActivada = false;
-            document.getElementById('breakCard').classList.remove('alerta-break');
-            actualizarDisplayBreak();
-        }
+        function iniciarTimerAtencion() { if (timerAtencionInterval) clearInterval(timerAtencionInterval); isAtencionRunning = true; timerAtencionInterval = setInterval(() => { if (isAtencionRunning) { timerAtencionSegundos++; document.getElementById('timerDisplay').textContent = `${Math.floor(timerAtencionSegundos/60).toString().padStart(2,'0')}:${(timerAtencionSegundos%60).toString().padStart(2,'0')}`; } }, 1000); }
+        function detenerTimerAtencion() { if (timerAtencionInterval) { clearInterval(timerAtencionInterval); timerAtencionInterval = null; } isAtencionRunning = false; }
+        function resetearTimerAtencion() { detenerTimerAtencion(); timerAtencionSegundos = 0; document.getElementById('timerDisplay').textContent = '00:00'; }
         
         function habilitarBotonesLlamada(activo) {
             const btnI = document.getElementById('btnIniciarLlamada');
@@ -605,461 +530,215 @@
         function iniciarCambioFrases() { if (fraseInterval) clearInterval(fraseInterval); document.getElementById('motivationalBanner').classList.remove('hidden'); fraseInterval = setInterval(() => { currentFraseIndex = (currentFraseIndex + 1) % frasesMotivacionales.length; const f = document.getElementById('fraseMotivacional'); if (f) { f.style.opacity = '0'; setTimeout(() => { f.textContent = frasesMotivacionales[currentFraseIndex]; f.style.opacity = '1'; }, 200); } }, 8000); }
         function detenerCambioFrases() { if (fraseInterval) { clearInterval(fraseInterval); fraseInterval = null; } document.getElementById('motivationalBanner').classList.add('hidden'); }
         
-        // ========== FUNCIÓN PARA EXTRAER NÚMEROS DE TELÉFONO ==========
+        // ========== EXTRACCIÓN DE NÚMEROS ==========
         function extraerNumerosTelefono(texto) {
-            const numeros = [];
+            const nums = [];
             const regex = /\b\d{10}\b/g;
             const matches = texto.match(regex);
-            if (matches) {
-                matches.forEach(num => {
-                    const numLimpio = num.replace(/\D/g, '');
-                    if (numLimpio.length >= 10 && !numeros.includes(numLimpio)) {
-                        numeros.push(numLimpio);
-                    }
-                });
-            }
-            const campos = [
-                /cel[_\s]*cliente\s*[:;]\s*(\d+)/i,
-                /tel[eé]fono\s*[:;]\s*(\d+)/i,
-                /celular\s*[:;]\s*(\d+)/i,
-                /tel[eé]fono a portar\s*[:;]\s*(\d+)/i,
-                /n[uú]mero a portar\s*[:;]\s*(\d+)/i
-            ];
-            campos.forEach(campo => {
-                const match = texto.match(campo);
-                if (match && match[1] && !numeros.includes(match[1])) {
-                    numeros.push(match[1]);
-                }
-            });
-            return [...new Set(numeros)];
+            if (matches) matches.forEach(n => { const l = n.replace(/\D/g,''); if(l.length>=10 && !nums.includes(l)) nums.push(l); });
+            const campos = [/cel[_\s]*cliente\s*[:;]\s*(\d+)/i, /tel[eé]fono\s*[:;]\s*(\d+)/i, /celular\s*[:;]\s*(\d+)/i, /tel[eé]fono a portar\s*[:;]\s*(\d+)/i, /n[uú]mero a portar\s*[:;]\s*(\d+)/i];
+            campos.forEach(c => { const m = texto.match(c); if(m && m[1] && !nums.includes(m[1])) nums.push(m[1]); });
+            return [...new Set(nums)];
         }
         
         function mostrarPanelNumeros() {
             const texto = document.getElementById('inputData').value;
-            const numeros = extraerNumerosTelefono(texto);
+            const nums = extraerNumerosTelefono(texto);
             const panel = document.getElementById('numerosExtraidosPanel');
             const lista = document.getElementById('listaNumerosExtraidos');
-            if (numeros.length === 0) {
-                lista.innerHTML = '<p class="text-gray-400 text-center text-sm">⚠️ No se encontraron números de teléfono en el texto</p>';
-                panel.classList.remove('hidden');
-                return;
-            }
+            if (nums.length === 0) { panel.classList.add('hidden'); return; }
+            panel.classList.remove('hidden');
             lista.innerHTML = '';
-            numeros.forEach(numero => {
+            nums.forEach(n => {
                 const div = document.createElement('div');
-                div.className = 'bg-white rounded-lg p-3 flex justify-between items-center hover:shadow-md transition cursor-pointer border border-gray-200';
+                div.className = 'bg-white rounded-lg p-1.5 flex justify-between items-center cursor-pointer border border-gray-200 text-xs';
                 div.onclick = () => {
-                    navigator.clipboard.writeText(numero);
-                    const notif = document.createElement('div');
-                    notif.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-bold z-50';
-                    notif.innerHTML = `<i class="fas fa-check-circle mr-2"></i> 📞 ${numero} copiado! Abriendo marcador...`;
-                    document.body.appendChild(notif);
-                    setTimeout(() => notif.remove(), 2500);
+                    navigator.clipboard.writeText(n);
+                    alert(`📞 ${n} copiado!`);
                     window.open('http://pbx18468.pbxhosting.com.mx/agent_portal/dialer.php', '_blank');
                 };
-                div.innerHTML = `
-                    <span class="font-mono text-lg font-bold text-[#005fb2]"><i class="fas fa-phone mr-2"></i>${numero}</span>
-                    <i class="fas fa-external-link-alt text-gray-400 text-sm"></i>
-                `;
+                div.innerHTML = `<span class="font-mono font-bold text-[#005fb2]"><i class="fas fa-phone mr-1"></i>${n}</span><i class="fas fa-external-link-alt text-gray-400"></i>`;
                 lista.appendChild(div);
             });
-            panel.classList.remove('hidden');
         }
         
         document.getElementById('btnMostrarNumeros').addEventListener('click', mostrarPanelNumeros);
         document.getElementById('btnCopiarTodosNumerosPanel').addEventListener('click', () => {
-            const texto = document.getElementById('inputData').value;
-            const numeros = extraerNumerosTelefono(texto);
-            if (numeros.length === 0) { alert("No hay números para copiar"); return; }
-            const textoNumeros = numeros.join('\n');
-            navigator.clipboard.writeText(textoNumeros);
-            const btn = document.getElementById('btnCopiarTodosNumerosPanel');
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check"></i> Copiados!';
-            setTimeout(() => btn.innerHTML = original, 1500);
+            const nums = extraerNumerosTelefono(document.getElementById('inputData').value);
+            if (nums.length) navigator.clipboard.writeText(nums.join('\n'));
         });
         
-        // ========== FUNCIÓN PARA DETECTAR SI EL PAQUETE INCLUYE LÍNEA TELEFÓNICA ==========
-        function detectarTieneLinea(rawText) {
-            const lower = rawText.toLowerCase();
-            // Palabras clave que indican que el paquete tiene línea telefónica
-            const palabrasConLinea = ['línea', 'linea', 'telefonía', 'telefonia', 'con línea', 'con linea', 'más línea', 'mas linea', 'llamadas', 'voz'];
-            // Palabras clave que indican que es solo internet
-            const palabrasSoloInternet = ['solo internet', 'solo internet', 'internet solamente', 'internet sin línea', 'internet sin linea'];
-            
-            for (const palabra of palabrasConLinea) {
-                if (lower.includes(palabra)) return true;
-            }
-            for (const palabra of palabrasSoloInternet) {
-                if (lower.includes(palabra)) return false;
-            }
-            // Por defecto, si no se especifica, asumimos que tiene línea (paquete residencial/negocio estándar)
-            return true;
-        }
-        
-        // ========== FUNCIONES DEL MODAL DE SPEECH ==========
-        function mostrarModalSpeech() {
-            if (!currentSteps || currentSteps.length === 0) { alert("No hay guion generado."); return; }
-            currentStepIndex = 0;
-            crearModal();
-            mostrarPasoActual();
-        }
-        
-        function crearModal() {
-            const existingModal = document.getElementById('speechModal');
-            if (existingModal) existingModal.remove();
-            const modal = document.createElement('div');
-            modal.id = 'speechModal';
-            modal.className = 'modal-overlay';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="bg-gradient-to-r from-[#005fb2] to-[#004a8f] px-6 py-4 rounded-t-2xl flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-microphone-alt text-white text-2xl"></i>
-                            <div>
-                                <h2 class="text-white font-bold text-xl">🎤 Guion de Validación</h2>
-                                <p class="text-white/70 text-xs">Sigue este speech paso a paso</p>
-                            </div>
-                        </div>
-                        <button id="btnCerrarModal" class="text-white/70 hover:text-white text-2xl">&times;</button>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-semibold text-gray-500">PASO</span>
-                                <span id="stepCounter" class="text-sm font-bold text-[#005fb2] bg-blue-100 px-3 py-1 rounded-full">0 / 0</span>
-                            </div>
-                            <div class="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div id="progressBar" class="h-full bg-[#005fb2] rounded-full transition-all duration-300" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div class="speech-bubble p-5 mb-6">
-                            <p id="speechText" class="text-white text-lg leading-relaxed">Cargando...</p>
-                        </div>
-                        <div class="flex gap-3">
-                            <button id="btnSpeechAnterior" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-xl transition flex items-center justify-center gap-2">
-                                <i class="fas fa-arrow-left"></i> Anterior
-                            </button>
-                            <button id="btnSpeechSiguiente" class="flex-1 bg-[#005fb2] hover:bg-[#004a8f] text-white font-semibold py-3 rounded-xl transition flex items-center justify-center gap-2">
-                                Continuar Speech <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-                        <div class="mt-4 text-center">
-                            <button id="btnSaltarModal" class="text-gray-400 hover:text-gray-600 text-xs underline">Cerrar guion</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-            document.getElementById('btnCerrarModal').addEventListener('click', cerrarModal);
-            document.getElementById('btnSaltarModal').addEventListener('click', cerrarModal);
-            document.getElementById('btnSpeechAnterior').addEventListener('click', pasoAnterior);
-            document.getElementById('btnSpeechSiguiente').addEventListener('click', pasoSiguiente);
-        }
-        
-        function mostrarPasoActual() {
-            if (!currentSteps || currentSteps.length === 0) return;
-            const paso = currentSteps[currentStepIndex];
-            const speechText = document.getElementById('speechText');
-            const stepCounter = document.getElementById('stepCounter');
-            const progressBar = document.getElementById('progressBar');
-            if (speechText) {
-                let textoResaltado = paso.speech;
-                if (currentData) {
-                    const vars = [currentData.nombreCompleto, currentData.primerNombre, currentEjecutivo, currentData.paquete, currentData.megas, currentData.costoMensual, currentData.direccionCompleta, currentData.celular, currentData.correo];
-                    for(let valor of vars) {
-                        if(valor && valor.length > 2 && !valor.includes("[")) {
-                            const regex = new RegExp(`(${valor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-                            textoResaltado = textoResaltado.replace(regex, `<span class="bg-yellow-300 text-gray-900 px-1 rounded">$1</span>`);
-                        }
-                    }
-                }
-                speechText.innerHTML = `<i class="fas fa-quote-left mr-2 opacity-50"></i> ${textoResaltado}`;
-            }
-            if (stepCounter) stepCounter.textContent = `${currentStepIndex + 1} / ${currentSteps.length}`;
-            if (progressBar) { const porcentaje = ((currentStepIndex + 1) / currentSteps.length) * 100; progressBar.style.width = `${porcentaje}%`; }
-            marcarCheckboxPorIndice(currentStepIndex);
-        }
-        
-        function marcarCheckboxPorIndice(index) {
-            const checkboxes = document.querySelectorAll('#scriptDynamicContent .script-step input[type="checkbox"]');
-            if (checkboxes[index]) { checkboxes[index].checked = true; checkboxes[index].dispatchEvent(new Event('change')); }
-        }
-        
-        function pasoAnterior() { if (currentStepIndex > 0) { currentStepIndex--; mostrarPasoActual(); } else { alert("📢 Ya estás en el primer paso"); } }
-        
-        function pasoSiguiente() {
-            if (currentStepIndex < currentSteps.length - 1) {
-                currentStepIndex++;
-                mostrarPasoActual();
-            } else {
-                mostrarComentariosFinales();
-            }
-        }
-        
-        // MODAL DE COMENTARIOS FINALES CON ENVÍO A TELEGRAM
-        function mostrarComentariosFinales() {
-            const comentariosModal = document.createElement('div');
-            comentariosModal.className = 'comentarios-final-modal';
-            comentariosModal.innerHTML = `
-                <div class="comentarios-card p-6">
-                    <div class="text-center mb-4">
-                        <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                            <i class="fas fa-comment-dots text-green-600 text-2xl"></i>
-                        </div>
-                        <h2 class="text-xl font-bold text-gray-800 mt-2">📝 Comentarios de la llamada</h2>
-                        <p class="text-gray-500 text-sm">Agrega observaciones sobre esta validación</p>
-                    </div>
-                    <textarea id="comentariosFinales" rows="4" class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#005fb2] mb-4" placeholder="Ej: Cliente interesado, requiere seguimiento, aceptó el paquete, etc."></textarea>
-                    <div class="flex gap-3">
-                        <button id="btnOmitirComentarios" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 rounded-xl transition">
-                            Omitir
-                        </button>
-                        <button id="btnEnviarComentarioTelegram" class="flex-1 bg-[#005fb2] hover:bg-[#004a8f] text-white font-semibold py-2 rounded-xl transition flex items-center justify-center gap-2">
-                            <i class="fab fa-telegram"></i> Enviar a Telegram
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(comentariosModal);
-            
-            document.getElementById('btnOmitirComentarios').addEventListener('click', () => {
-                comentariosModal.remove();
-                mostrarResumenFinal("");
-            });
-            
-            document.getElementById('btnEnviarComentarioTelegram').addEventListener('click', () => {
-                const comentario = document.getElementById('comentariosFinales').value.trim();
-                const ejecutivoNombre = document.getElementById('nombreEjecutivo').value.trim() || "Ejecutivo";
-                const fecha = new Date().toLocaleString();
-                const clienteNombre = currentData?.nombreCompleto || "Cliente";
-                const mensaje = `📋 *COMENTARIO DE LLAMADA - SWAC* 📋\n\n👤 *Ejecutivo:* ${ejecutivoNombre}\n👥 *Cliente:* ${clienteNombre}\n📅 *Fecha/Hora:* ${fecha}\n💬 *Comentario:* ${comentario || "Sin comentarios"}\n\n---\nEnviado desde SWAC - Sistema Web de Atención al Cliente`;
-                navigator.clipboard.writeText(mensaje);
-                window.open('https://t.me/liscl_bot', '_blank');
-                comentariosModal.remove();
-                mostrarResumenFinal(comentario);
-            });
-        }
-        
-        async function mostrarResumenFinal(comentarioFinal) {
-            cerrarModal();
-            detenerTimerAtencion();
-            detenerCambioFrases();
-            habilitarBotonesLlamada(false);
-            
-            const minutos = Math.floor(timerAtencionSegundos / 60);
-            const segundos = timerAtencionSegundos % 60;
-            const tiempoFormateado = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-            const ejecutivoNombre = document.getElementById('nombreEjecutivo').value.trim() || "Ejecutivo";
-            const clienteNombre = currentData?.nombreCompleto || "Cliente";
-            
-            contadorLlamadas++;
-            document.getElementById('contadorLlamadas').textContent = contadorLlamadas;
-            
-            const resumenModal = document.createElement('div');
-            resumenModal.className = 'resumen-modal';
-            resumenModal.innerHTML = `
-                <div class="resumen-card p-6 text-center">
-                    <div class="mb-4">
-                        <div class="bg-green-500 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                            <i class="fas fa-check-circle text-white text-5xl"></i>
-                        </div>
-                    </div>
-                    <h2 class="text-2xl font-bold text-white mb-2">✅ ¡LLAMADA COMPLETADA!</h2>
-                    <div class="bg-white/10 rounded-xl p-4 mb-4">
-                        <p class="text-gray-300 text-sm">TIEMPO TOTAL DE ATENCIÓN (TMO)</p>
-                        <div class="text-5xl font-mono font-bold text-green-400 my-2">${tiempoFormateado}</div>
-                        <div class="flex justify-center gap-4 text-sm">
-                            <div class="bg-black/30 rounded-lg px-3 py-1">
-                                <span class="text-gray-400">Segundos:</span>
-                                <span class="text-white font-bold">${timerAtencionSegundos} s</span>
-                            </div>
-                            <div class="bg-black/30 rounded-lg px-3 py-1">
-                                <span class="text-gray-400">Minutos:</span>
-                                <span class="text-white font-bold">${minutos} min</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-3 mb-4">
-                        <p class="text-gray-300 text-sm">📋 INFORMACIÓN DEL PROCESO</p>
-                        <p class="text-white mt-1"><i class="fas fa-user-circle mr-2"></i> <strong>Ejecutivo:</strong> ${ejecutivoNombre}</p>
-                        <p class="text-white mt-1"><i class="fas fa-user mr-2"></i> <strong>Cliente:</strong> ${clienteNombre}</p>
-                        <p class="text-white mt-1"><i class="fas fa-chart-line mr-2"></i> <strong>Llamada #:</strong> ${contadorLlamadas}</p>
-                        <p class="text-white mt-1"><i class="fas fa-calendar mr-2"></i> <strong>Fecha/Hora:</strong> ${new Date().toLocaleString()}</p>
-                        ${comentarioFinal ? `<p class="text-white mt-2 border-t border-white/20 pt-2"><i class="fas fa-comment mr-2"></i> <strong>Comentario:</strong> ${comentarioFinal.substring(0, 100)}${comentarioFinal.length > 100 ? '...' : ''}</p>` : ''}
-                    </div>
-                    <div class="flex gap-3">
-                        <button id="btnCerrarResumen" class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 rounded-xl transition">
-                            Cerrar
-                        </button>
-                        <button id="btnCopiarResumen" class="flex-1 bg-[#005fb2] hover:bg-[#004a8f] text-white font-semibold py-2 rounded-xl transition flex items-center justify-center gap-2">
-                            <i class="fas fa-copy"></i> Copiar resumen
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(resumenModal);
-            
-            document.getElementById('btnCerrarResumen').addEventListener('click', () => { resumenModal.remove(); });
-            document.getElementById('btnCopiarResumen').addEventListener('click', () => {
-                const resumenTexto = `✅ LLAMADA COMPLETADA - SWAC\n\n⏱️ TIEMPO TOTAL DE ATENCIÓN (TMO): ${tiempoFormateado} (${timerAtencionSegundos} segundos / ${minutos} minutos)\n👤 Ejecutivo: ${ejecutivoNombre}\n👥 Cliente: ${clienteNombre}\n📊 Llamada #: ${contadorLlamadas}\n📅 Fecha: ${new Date().toLocaleString()}${comentarioFinal ? `\n💬 Comentario: ${comentarioFinal}` : ''}`;
-                navigator.clipboard.writeText(resumenTexto);
-                const btn = document.getElementById('btnCopiarResumen');
-                const original = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
-                setTimeout(() => btn.innerHTML = original, 1500);
-            });
-        }
-        
-        function cerrarModal() { const modal = document.getElementById('speechModal'); if (modal) modal.remove(); }
-        
-        // ========== DETECCIÓN DE GÉNERO ==========
+        // ========== DETECCIÓN DE GÉNERO Y EXTRACCIÓN ==========
         function detectarGenero(nombre) {
             if (!nombre || nombre === "[Nombre del cliente]") return { genero: "M", tratamiento: "señor", tratamientoLargo: "el Sr." };
             const n = nombre.toLowerCase().split(' ')[0];
-            if (n.endsWith('a') || n === 'mercedes' || n === 'margarita' || n === 'concepción' || n === 'beatriz' || n === 'isabel') {
-                return { genero: "F", tratamiento: "señora", tratamientoLargo: "la Sra." };
-            }
+            if (n.endsWith('a') || n === 'mercedes' || n === 'margarita') return { genero: "F", tratamiento: "señora", tratamientoLargo: "la Sra." };
             return { genero: "M", tratamiento: "señor", tratamientoLargo: "el Sr." };
         }
         
-        // ========== EXTRACCIÓN DE DATOS ==========
         function extractData(rawText) {
-            const getVal = (keys) => {
-                for(let k of keys) {
-                    const regex = new RegExp(`${k}\\s*[:\\-]?\\s*(.+?)(?=\\n|\\r|$)`, 'i');
-                    const m = rawText.match(regex);
-                    if(m && m[1].trim()) return m[1].trim();
-                }
-                return "";
-            };
-            const direccionMatch = rawText.match(/(?:domicilio|direcci[oó]n)\s*[:;\-]?\s*([^\n]+)/i);
-            const data = {
-                nombreCompleto: getVal(["nombre del cliente", "cliente", "nombre cliente", "nombre"]),
+            const getVal = (keys) => { for(let k of keys) { const r = new RegExp(`${k}\\s*[:\\-]?\\s*(.+?)(?=\\n|\\r|$)`, 'i'); const m = rawText.match(r); if(m && m[1].trim()) return m[1].trim(); } return ""; };
+            const dirMatch = rawText.match(/(?:domicilio|direcci[oó]n)\s*[:;\-]?\s*([^\n]+)/i);
+            return {
+                nombreCompleto: getVal(["nombre del cliente", "cliente", "nombre"]) || "[Nombre del cliente]",
                 paquete: getVal(["paquete", "plan"]) || "Paquete Infinitum",
                 megas: getVal(["megas", "velocidad"]) || "120",
-                costoMensual: getVal(["costo mensual", "mensualidad", "precio"]) || "389",
-                celular: getVal(["cel cliente", "celular", "teléfono", "telefono"]),
-                correo: getVal(["correo", "email"]),
-                telefonoPortar: getVal(["teléfono a portar", "telefono a portar"]),
-                nip: getVal(["nip"]),
-                companiaOrigen: getVal(["compañia", "operadora actual"]),
-                giroNegocio: getVal(["giro del negocio", "giro negocio"]),
-                direccionCompleta: direccionMatch ? direccionMatch[1].trim() : "[dirección no proporcionada]",
-                tipoVenta: "NUEVO RESIDENCIAL",
-                tieneLinea: detectarTieneLinea(rawText)
+                costoMensual: getVal(["costo mensual", "mensualidad"]) || "389",
+                celular: getVal(["cel cliente", "celular", "teléfono"]) || "[teléfono]",
+                correo: getVal(["correo", "email"]) || "[correo]",
+                direccionCompleta: dirMatch ? dirMatch[1].trim() : "[dirección no proporcionada]",
+                tipoVenta: rawText.toLowerCase().includes("portabilidad") ? "PORTABILIDAD / AIR" : "NUEVO RESIDENCIAL",
+                tieneLinea: detectarTieneLinea(rawText),
+                eleccionCliente: detectarEleccionCliente(rawText),
+                primerNombre: (getVal(["nombre del cliente", "cliente", "nombre"]) || "cliente").split(' ')[0],
+                ...detectarGenero(getVal(["nombre del cliente", "cliente", "nombre"]))
             };
-            data.primerNombre = data.nombreCompleto.split(' ')[0];
-            const lower = rawText.toLowerCase();
-            if (lower.includes("portabilidad") || data.telefonoPortar) data.tipoVenta = "PORTABILIDAD / AIR";
-            else if (lower.includes("negocio") || data.giroNegocio) data.tipoVenta = "NUEVO NEGOCIO";
-            else if (lower.includes("upsell") || lower.includes("cambio de megas")) data.tipoVenta = "UPSELL";
-            const gen = detectarGenero(data.nombreCompleto);
-            data.tratamiento = gen.tratamiento;
-            data.tratamientoLargo = gen.tratamientoLargo;
-            if(!data.nombreCompleto) data.nombreCompleto = "[Nombre del cliente]";
-            if(!data.celular) data.celular = "[teléfono]";
-            if(!data.correo) data.correo = "[correo]";
-            return data;
         }
         
-        // ========== SPEECH CON NUEVA LÓGICA DE PROMOCIONES ==========
+        // ========== SPEECH CON LÓGICA DE PROMOCIONES SEGÚN ELECCIÓN ==========
         function generarSpeech(data, ejecutivo) {
             const tipo = data.tipoVenta;
-            const nombreCompleto = data.nombreCompleto;
-            const primerNombre = data.primerNombre;
-            const tratamiento = data.tratamiento;
-            const tratamientoLargo = data.tratamientoLargo;
-            const paquete = data.paquete;
-            const megas = data.megas;
-            const costo = data.costoMensual;
-            const direccion = data.direccionCompleta;
-            const celular = data.celular;
-            const correo = data.correo;
             const tieneLinea = data.tieneLinea;
+            const eleccion = data.eleccionCliente;
             
-            const confirmacionSpeech = `El motivo de la llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas ${tieneLinea ? 'más línea ilimitada' : 'solo internet'}, con un costo mensual de $${costo}), ¿es correcto?`;
+            // Orden correcto: primero megas, luego costo
+            const confirmacion = `El motivo de la llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${data.paquete} de hasta ${data.megas} Megas ${tieneLinea ? 'más línea ilimitada' : 'solo internet'}, con un costo mensual de $${data.costoMensual}), ¿es correcto?`;
             
-            // Construcción de promociones según el tipo de paquete
             let promocionInicial = "";
             let opcionesDomiciliacion = "";
             
             if (tieneLinea) {
-                // Paquete con línea telefónica (Internet + Llamadas)
-                promocionInicial = `Le informo que por contratar ${paquete} con línea ilimitada, tiene la opción de elegir entre 6 meses gratis de Netflix con anuncios para dos pantallas o 6 meses gratis de HBO+ para dos pantallas. ¿Cuál prefiere?`;
-                opcionesDomiciliacion = `Además, le comento que al domiciliar su servicio, podrá elegir entre 6 meses gratis de HBO+ o 6 meses gratis de F1TV (si eligió Netflix), o entre 6 meses gratis de Netflix con anuncios o 6 meses gratis de F1TV (si eligió HBO+).`;
+                // Cliente con internet + línea telefónica
+                if (eleccion === 'netflix') {
+                    promocionInicial = `Le informo que por contratar ${data.paquete} con línea ilimitada, según su elección, tendrá 6 meses gratis de Netflix con anuncios para dos pantallas.`;
+                    opcionesDomiciliacion = `Le comento que al domiciliar su servicio, podrá elegir entre 6 meses gratis de HBO+ o 6 meses gratis de F1TV como beneficio adicional.`;
+                } else if (eleccion === 'hbo') {
+                    promocionInicial = `Le informo que por contratar ${data.paquete} con línea ilimitada, según su elección, tendrá 6 meses gratis de HBO+ para dos pantallas.`;
+                    opcionesDomiciliacion = `Le comento que al domiciliar su servicio, podrá elegir entre 6 meses gratis de Netflix con anuncios o 6 meses gratis de F1TV como beneficio adicional.`;
+                } else {
+                    // Sin elección específica, mostrar ambas opciones
+                    promocionInicial = `Le informo que por contratar ${data.paquete} con línea ilimitada, tiene la opción de elegir entre 6 meses gratis de Netflix con anuncios para dos pantallas o 6 meses gratis de HBO+ para dos pantallas. ¿Cuál prefiere?`;
+                    opcionesDomiciliacion = `Además, le comento que al domiciliar su servicio, podrá elegir entre promociones adicionales según su selección inicial.`;
+                }
             } else {
-                // Paquete solo internet
-                promocionInicial = `Le informo que por contratar ${paquete} solo internet, el servicio le ofrece 6 meses gratis de HBO+ para dos pantallas.`;
+                // Cliente solo internet
+                promocionInicial = `Le informo que por contratar ${data.paquete} solo internet, el servicio le ofrece 6 meses gratis de HBO+ para dos pantallas.`;
                 opcionesDomiciliacion = `Le comento que al domiciliar su servicio, podrá elegir entre 6 meses gratis de Netflix con anuncios o 6 meses gratis de F1TV.`;
             }
             
-            if (tipo === "NUEVO RESIDENCIAL") {
-                return [
-                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Contratación", speech: confirmacionSpeech },
-                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga. (5 pantallas)` },
-                    { text: "5. Promociones de Streaming", speech: promocionInicial },
-                    { text: "6. Promociones al Domiciliar", speech: opcionesDomiciliacion },
-                    { text: "7. Gastos de Instalación", speech: `El paquete (por ser cliente nuevo) tiene un gasto de instalación de $1,600, el cual puede EFECTUAR CON UN PAGO inicial de $400 y posteriormente en cada recibo le llegará un cargo de $100 durante 12 meses.` },
-                    { text: "8. Opciones de Pago Inicial", speech: `En el momento en que generó su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En establecimientos autorizados de pago como Centros de atención TELMEX, TELCEL, SAMBORS, OXXO, BBVA, IMBURSA, entre otros.` },
-                    { text: "9. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX. Recuerde que al domiciliar, ${tieneLinea ? 'podrá elegir entre las promociones adicionales mencionadas.' : 'podrá elegir entre Netflix o F1TV.'}` },
-                    { text: "10. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "11. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "12. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "13. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
-                    { text: "14. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
-                ];
-            } else if (tipo === "PORTABILIDAD / AIR") {
-                return [
-                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Contratación", speech: confirmacionSpeech },
-                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga.` },
-                    { text: "5. Promociones de Streaming", speech: promocionInicial },
-                    { text: "6. Promociones al Domiciliar", speech: opcionesDomiciliacion },
-                    { text: "7. Beneficios Portabilidad", speech: `Le confirmo que los gastos de instalación serán totalmente gratis y el paquete le aplica para una bonificación en los meses 4, 8 y 12 de su facturación (Totalmente gratis).` },
-                    { text: "8. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX. ${tieneLinea ? 'Al domiciliar, podrá elegir entre las promociones adicionales mencionadas.' : 'Al domiciliar, podrá elegir entre Netflix o F1TV.'}` },
-                    { text: "9. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "10. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "11. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "12. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
-                    { text: "13. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
-                ];
-            } else if (tipo === "NUEVO NEGOCIO") {
-                return [
-                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Contratación", speech: confirmacionSpeech },
-                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga. (5 pantallas)` },
-                    { text: "5. Giro del Negocio", speech: `Me indica por favor el giro de su negocio.` },
-                    { text: "6. Promociones de Streaming", speech: promocionInicial },
-                    { text: "7. Promociones al Domiciliar", speech: opcionesDomiciliacion },
-                    { text: "8. Gastos de Instalación", speech: `El paquete tiene un gasto de instalación de $1,600, el cual puede EFECTUAR CON UN PAGO inicial de $400 y posteriormente en cada recibo telefónico le llegará un cargo de $100 durante 12 meses.` },
-                    { text: "9. Opciones de Pago Inicial", speech: `En el momento en que generó su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En establecimientos autorizados de pago como Centros de atención TELMEX, TELCEL, SAMBORS, OXXO, BBVA, IMBURSA, entre otros.` },
-                    { text: "10. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX. ${tieneLinea ? 'Al domiciliar, podrá elegir entre las promociones adicionales mencionadas.' : 'Al domiciliar, podrá elegir entre Netflix o F1TV.'}` },
-                    { text: "11. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "12. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "13. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "14. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
-                    { text: "15. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
-                ];
-            } else {
-                // UPSELL
-                return [
-                    { text: "1. Saludo", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Grabación", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Cambio", speech: `El motivo de la llamada es para confirmar el cambio de megas en su paquete infinitum. Usted desea incrementar a ${megas} megas, ¿es correcto?` },
-                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga.` },
-                    { text: "5. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.` },
-                    { text: "6. Confirmación de Domicilio", speech: `Me confirma la dirección donde se encuentra instalado el servicio. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "7. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "8. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "9. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos confirmando el incremento de velocidad en su paquete infinitum.` },
-                    { text: "10. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
-                ];
-            }
+            const base = [
+                { text: "1. Saludo", speech: `Buenas tardes, me comunico con ${data.tratamientoLargo} ${data.nombreCompleto}. Mi nombre es ${ejecutivo}, de 105RM Promotor Autorizado Infinitum.` },
+                { text: "2. Aviso", speech: `Le notifico ${data.tratamiento} ${data.primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
+                { text: "3. Confirmación", speech: confirmacion },
+                { text: "4. Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga. (5 pantallas)` },
+                { text: "5. Promociones de Streaming", speech: promocionInicial },
+                { text: "6. Promociones al Domiciliar", speech: opcionesDomiciliacion },
+                { text: "7. Instalación", speech: tipo === "PORTABILIDAD / AIR" ? `Le confirmo que los gastos de instalación serán totalmente gratis y el paquete le aplica para una bonificación en los meses 4, 8 y 12 de su facturación (Totalmente gratis).` : `El paquete (por ser cliente nuevo) tiene un gasto de instalación de $1,600, el cual puede EFECTUAR CON UN PAGO inicial de $400 y posteriormente en cada recibo le llegará un cargo de $100 durante 12 meses.` },
+                { text: "8. Pago Inicial", speech: `En el momento en que generó su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En establecimientos autorizados de pago como Centros de atención TELMEX, TELCEL, SAMBORS, OXXO, BBVA, IMBURSA, entre otros.` },
+                { text: "9. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX. ${tieneLinea ? 'Recuerde que al domiciliar, podrá elegir beneficios adicionales.' : 'Recuerde que al domiciliar, podrá elegir entre Netflix o F1TV.'}` },
+                { text: "10. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${data.direccionCompleta}. Verifica el correo electrónico ${data.correo} y el teléfono ${data.celular}.` },
+                { text: "11. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
+                { text: "12. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
+                { text: "13. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
+                { text: "14. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
+            ];
+            return base;
+        }
+        
+        // ========== MODAL Y RENDERIZADO ==========
+        function mostrarModalSpeech() {
+            if (!currentSteps?.length) { alert("No hay guion generado."); return; }
+            currentStepIndex = 0;
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="bg-[#005fb2] px-4 py-3 rounded-t-2xl flex justify-between items-center">
+                        <h2 class="text-white font-bold">🎤 Guion de Validación</h2>
+                        <button id="closeModal" class="text-white text-2xl">&times;</button>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between mb-3">
+                            <span id="stepCounter" class="bg-blue-100 text-[#005fb2] px-3 py-1 rounded-full text-sm">1 / ${currentSteps.length}</span>
+                            <div class="w-32 h-2 bg-gray-200 rounded-full overflow-hidden"><div id="progressBar" class="h-full bg-[#005fb2] transition-all" style="width: ${(1/currentSteps.length)*100}%"></div></div>
+                        </div>
+                        <div class="speech-bubble p-4 mb-4"><p id="speechText" class="text-white">${currentSteps[0].speech}</p></div>
+                        <div class="flex gap-3">
+                            <button id="prevStep" class="flex-1 bg-gray-200 py-2 rounded-xl"><i class="fas fa-arrow-left"></i> Anterior</button>
+                            <button id="nextStep" class="flex-1 bg-[#005fb2] text-white py-2 rounded-xl">Continuar <i class="fas fa-arrow-right"></i></button>
+                        </div>
+                        <div class="text-center mt-3"><button id="closeModalBtn" class="text-gray-400 text-xs underline">Cerrar guion</button></div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            const update = () => {
+                document.getElementById('stepCounter').innerText = `${currentStepIndex+1} / ${currentSteps.length}`;
+                document.getElementById('progressBar').style.width = `${((currentStepIndex+1)/currentSteps.length)*100}%`;
+                document.getElementById('speechText').innerHTML = currentSteps[currentStepIndex].speech;
+            };
+            document.getElementById('nextStep').onclick = () => { if (currentStepIndex < currentSteps.length-1) { currentStepIndex++; update(); } else { cerrarModal(); mostrarComentariosFinales(); } };
+            document.getElementById('prevStep').onclick = () => { if (currentStepIndex > 0) { currentStepIndex--; update(); } };
+            const cerrarModal = () => modal.remove();
+            document.getElementById('closeModal').onclick = cerrarModal;
+            document.getElementById('closeModalBtn').onclick = cerrarModal;
+        }
+        
+        function mostrarComentariosFinales() {
+            const modal = document.createElement('div');
+            modal.className = 'comentarios-final-modal';
+            modal.innerHTML = `
+                <div class="comentarios-card p-4">
+                    <h2 class="text-xl font-bold text-center">📝 Comentarios de la llamada</h2>
+                    <textarea id="comentarioFinal" rows="3" class="w-full border rounded-lg p-2 my-3 text-sm"></textarea>
+                    <div class="flex gap-3">
+                        <button id="omitirBtn" class="flex-1 bg-gray-300 py-2 rounded-xl">Omitir</button>
+                        <button id="enviarTelegramBtn" class="flex-1 bg-[#005fb2] text-white py-2 rounded-xl"><i class="fab fa-telegram"></i> Enviar a Telegram</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            const cerrar = () => modal.remove();
+            document.getElementById('omitirBtn').onclick = () => { cerrar(); mostrarResumenFinal(""); };
+            document.getElementById('enviarTelegramBtn').onclick = () => {
+                const coment = document.getElementById('comentarioFinal').value.trim();
+                const ejecutivo = document.getElementById('nombreEjecutivo').value.trim() || "Ejecutivo";
+                const fecha = new Date().toLocaleString();
+                const cliente = currentData?.nombreCompleto || "Cliente";
+                const msg = `📋 COMENTARIO LLAMADA SWAC\n👤 ${ejecutivo}\n👥 ${cliente}\n📅 ${fecha}\n💬 ${coment || "Sin comentarios"}`;
+                navigator.clipboard.writeText(msg);
+                enviarATelegram(msg);
+                cerrar();
+                mostrarResumenFinal(coment);
+            };
+        }
+        
+        function mostrarResumenFinal(comentario) {
+            const minutos = Math.floor(timerAtencionSegundos / 60);
+            const segundos = timerAtencionSegundos % 60;
+            const ejecutivo = document.getElementById('nombreEjecutivo').value.trim() || "Ejecutivo";
+            contadorLlamadas++;
+            document.getElementById('contadorLlamadas').textContent = contadorLlamadas;
+            const modal = document.createElement('div');
+            modal.className = 'resumen-modal';
+            modal.innerHTML = `
+                <div class="resumen-card p-4 text-center">
+                    <div class="bg-green-500 rounded-full w-16 h-16 flex mx-auto items-center justify-center"><i class="fas fa-check-circle text-white text-4xl"></i></div>
+                    <h2 class="text-xl font-bold text-white mt-2">✅ ¡LLAMADA COMPLETADA!</h2>
+                    <div class="bg-white/10 rounded-lg p-3 my-3">
+                        <p class="text-gray-300 text-sm">TIEMPO TOTAL (TMO)</p>
+                        <div class="text-3xl font-mono font-bold text-green-400">${minutos.toString().padStart(2,'0')}:${segundos.toString().padStart(2,'0')}</div>
+                        <div class="flex justify-center gap-3 text-xs mt-1"><span>${timerAtencionSegundos} s</span><span>${minutos} min</span></div>
+                    </div>
+                    <div class="text-white text-sm mb-3">👤 Ejecutivo: ${ejecutivo}<br>👥 Cliente: ${currentData?.nombreCompleto || "Cliente"}<br>📊 Llamada #${contadorLlamadas}</div>
+                    <button id="closeResumen" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-1 rounded-xl">Cerrar</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('closeResumen').onclick = () => modal.remove();
+            detenerTimerAtencion();
+            detenerCambioFrases();
+            habilitarBotonesLlamada(false);
         }
         
         function renderizarGuionCompleto(steps, data, ejecutivo) {
@@ -1069,29 +748,22 @@
             document.getElementById('scriptPlaceholder').classList.add('hidden');
             steps.forEach((step, idx) => {
                 const div = document.createElement('div');
-                div.className = 'script-step rounded-lg mb-2 p-2 shadow-sm border text-sm';
+                div.className = 'script-step rounded-lg mb-1 p-1 shadow-sm border text-xs';
                 const header = document.createElement('div');
-                header.className = 'flex items-start gap-2';
+                header.className = 'flex items-start gap-1';
                 const chk = document.createElement('input');
                 chk.type = 'checkbox';
-                chk.className = 'mt-1 w-4 h-4 rounded';
-                chk.onchange = (e) => { if(e.target.checked) div.classList.add('completed'); else div.classList.remove('completed'); };
+                chk.className = 'mt-0.5 w-3 h-3 rounded';
                 const title = document.createElement('div');
-                title.className = 'flex-1 font-semibold text-gray-800 text-xs';
+                title.className = 'flex-1 font-semibold text-gray-800';
                 title.innerText = step.text;
                 header.appendChild(chk);
                 header.appendChild(title);
                 const speech = document.createElement('div');
-                speech.className = 'mt-1 pl-6 text-[#005fb2] font-medium bg-blue-50 p-1 rounded text-xs';
-                let textoFinal = step.speech;
-                const vars = [data.nombreCompleto, data.primerNombre, ejecutivo, data.paquete, data.megas, data.costoMensual, data.direccionCompleta, data.celular, data.correo];
-                for(let valor of vars) {
-                    if(valor && valor.length > 2 && !valor.includes("[")) {
-                        const regex = new RegExp(`(${valor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-                        textoFinal = textoFinal.replace(regex, `<span class="highlight-variable">$1</span>`);
-                    }
-                }
-                speech.innerHTML = `<i class="fas fa-comment-dots mr-1"></i> "${textoFinal}"`;
+                speech.className = 'mt-1 pl-4 text-[#005fb2] bg-blue-50 p-1 rounded text-[10px]';
+                let texto = step.speech;
+                [data.nombreCompleto, data.primerNombre, ejecutivo, data.paquete, data.megas, data.costoMensual, data.direccionCompleta, data.celular, data.correo].forEach(v => { if(v && v.length>2) texto = texto.replace(new RegExp(`(${v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<span class="highlight-variable">$1</span>'); });
+                speech.innerHTML = `<i class="fas fa-comment-dots mr-1"></i> "${texto}"`;
                 div.appendChild(header);
                 div.appendChild(speech);
                 container.appendChild(div);
@@ -1103,13 +775,10 @@
             const ejecutivo = document.getElementById('nombreEjecutivo').value.trim();
             if(!raw) { alert("❌ Pega los datos del cliente."); return; }
             if(!ejecutivo) { alert("❌ Ingresa tu nombre."); return; }
-            
             resetearTimerAtencion();
             iniciarTimerAtencion();
-            
             detenerCambioFrases();
             habilitarBotonesLlamada(false);
-            
             const data = extractData(raw);
             currentData = data;
             currentEjecutivo = ejecutivo;
@@ -1120,47 +789,27 @@
         
         function copiarGuion() {
             const steps = document.querySelectorAll('#scriptDynamicContent .script-step');
-            if(steps.length === 0) { alert("No hay guion"); return; }
-            let texto = "=== SWAC - GUION ===\n\n";
-            steps.forEach((div, i) => {
-                const t = div.querySelector('.flex-1')?.innerText || "";
-                const s = div.querySelector('.mt-1.pl-6')?.innerText.replace(/["]/g, '') || "";
-                texto += `${t}\n💬 ${s}\n\n`;
-            });
+            if(!steps.length) { alert("No hay guion"); return; }
+            let texto = "=== SWAC - GUION ===\n";
+            steps.forEach(div => { texto += `${div.querySelector('.flex-1')?.innerText}\n💬 ${div.querySelector('.mt-1.pl-4')?.innerText.replace(/["]/g, '')}\n\n`; });
             navigator.clipboard.writeText(texto);
             alert("📋 Guion copiado");
         }
         
         function generarResumenActividad() {
             const nombre = document.getElementById('nombreEjecutivo').value.trim() || "Ejecutivo";
-            const llamadas = contadorLlamadas;
-            const horas = Math.floor(timerConexionSegundos / 3600);
-            const mins = Math.floor((timerConexionSegundos % 3600) / 60);
-            const segs = timerConexionSegundos % 60;
-            const breakUsado = 1800 - timerBreakSegundos;
-            const bMins = Math.floor(breakUsado / 60);
-            const bSegs = breakUsado % 60;
-            const fecha = new Date().toLocaleString();
-            return `📊 *RESUMEN SWAC*\n👤 ${nombre}\n📅 ${fecha}\n⏱️ Conexión: ${horas}h ${mins}m ${segs}s\n📞 Llamadas: ${llamadas}\n☕ Break: ${bMins}m ${bSegs}s\n✅ Validaciones: ${llamadas}`;
+            const h = Math.floor(timerConexionSegundos / 3600), m = Math.floor((timerConexionSegundos % 3600) / 60), s = timerConexionSegundos % 60;
+            const breakUsado = 1800 - timerBreakSegundos, bm = Math.floor(breakUsado / 60), bs = breakUsado % 60;
+            return `📊 RESUMEN SWAC\n👤 ${nombre}\n📅 ${new Date().toLocaleString()}\n⏱️ Conexión: ${h}h ${m}m ${s}s\n📞 Llamadas: ${contadorLlamadas}\n☕ Break: ${bm}m ${bs}s`;
         }
         
         // ========== EVENTOS ==========
-        document.getElementById('btnResumenActividad').addEventListener('click', () => {
-            const msg = generarResumenActividad();
-            navigator.clipboard.writeText(msg);
-            window.open('https://wa.me/584120754787?text=' + encodeURIComponent(msg), '_blank');
-        });
-        document.getElementById('btnAbrirDialer').addEventListener('click', () => window.open('http://pbx18468.pbxhosting.com.mx/agent_portal/dialer.php', '_blank'));
-        document.getElementById('btnCopiarComentario').addEventListener('click', () => {
-            const c = document.getElementById('comentarios').value.trim();
-            if(!c) { alert("Escribe un comentario"); return; }
-            navigator.clipboard.writeText(c);
-            window.open('https://t.me/liscl_bot', '_blank');
-        });
+        document.getElementById('btnResumenActividad').onclick = () => { const msg = generarResumenActividad(); navigator.clipboard.writeText(msg); window.open('https://wa.me/584120754787?text=' + encodeURIComponent(msg), '_blank'); };
+        document.getElementById('btnCopiarComentario').onclick = () => { const c = document.getElementById('comentarios').value.trim(); if(!c) { alert("Escribe un comentario"); return; } const msg = `📋 COMENTARIO SWAC\n👤 ${document.getElementById('nombreEjecutivo').value.trim() || "Ejecutivo"}\n📅 ${new Date().toLocaleString()}\n💬 ${c}`; navigator.clipboard.writeText(msg); enviarATelegram(msg); };
         document.getElementById('btnIniciarLlamada').onclick = () => { if(!isAtencionRunning) { resetearTimerAtencion(); iniciarTimerAtencion(); habilitarBotonesLlamada(true); iniciarCambioFrases(); } };
         document.getElementById('btnDetenerLlamada').onclick = () => { detenerTimerAtencion(); detenerCambioFrases(); habilitarBotonesLlamada(false); };
         document.getElementById('generateBtn').onclick = procesar;
-        document.getElementById('resetBtn').onclick = () => { location.reload(); };
+        document.getElementById('resetBtn').onclick = () => location.reload();
         document.getElementById('copyScriptBtn').onclick = copiarGuion;
         document.getElementById('btnIniciarConexion').onclick = iniciarTimerConexion;
         document.getElementById('btnDetenerConexion').onclick = detenerTimerConexion;
@@ -1173,7 +822,8 @@
 Cel cliente: 2751064149
 Correo: sergio.avila@email.com
 Domicilio: RIO CHIUATLAN 1010, Colonia LAS ÁGUILAS, ZAPOPAN CP 45080
-Paquete: 389 Megas: 120 con línea telefónica`;
+Paquete: 389 Megas: 120 con línea telefónica
+El cliente eligió Netflix con anuncios`;
         document.getElementById('inputData').value = ejemplo;
     </script>
 </body>

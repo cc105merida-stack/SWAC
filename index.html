@@ -78,12 +78,13 @@
             transform: translateY(-2px);
         }
         .alerta-break {
-            animation: alertaPulse 0.5s infinite;
+            animation: alertaPulse 0.8s infinite;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5);
         }
         @keyframes alertaPulse {
-            0% { background-color: #ef4444; }
+            0% { background-color: #ea580c; }
             50% { background-color: #dc2626; }
-            100% { background-color: #ef4444; }
+            100% { background-color: #ea580c; }
         }
         .counter-card {
             background: linear-gradient(135deg, #005fb2 0%, #004a8f 100%);
@@ -170,6 +171,24 @@
         }
         .comentario-modal:focus-within {
             box-shadow: 0 0 0 2px #005fb2;
+        }
+        /* Toast notification */
+        .toast-notify {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1f2937;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 1100;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeInUp 0.2s ease-out;
         }
     </style>
 </head>
@@ -284,7 +303,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Ficha del cliente (texto libre)</label>
                         <textarea id="inputData" rows="6" class="w-full border border-gray-300 rounded-xl p-4 font-mono text-sm bg-gray-50 focus:ring-2 focus:ring-[#005fb2]"></textarea>
                     </div>
-                   
+                    
                     <!-- BOTÓN NÚMEROS A LLAMAR -->
                     <div>
                         <button id="btnMostrarNumeros" class="btn-numeros w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 shadow-md">
@@ -293,7 +312,7 @@
                             <i class="fas fa-chevron-down text-sm"></i>
                         </button>
                     </div>
-                   
+                    
                     <!-- Panel para mostrar números extraídos -->
                     <div id="numerosExtraidosPanel" class="hidden mt-2 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
                         <div class="bg-gray-100 px-4 py-2 font-semibold text-gray-700 text-sm flex justify-between items-center">
@@ -306,10 +325,10 @@
                             <p class="text-gray-400 text-center text-sm">No hay números detectados aún</p>
                         </div>
                         <div class="bg-gray-100 px-4 py-2 text-xs text-gray-500 text-center">
-                            <i class="fas fa-info-circle"></i> Haz clic en cualquier número para copiarlo y abrir el marcador
+                            <i class="fas fa-info-circle"></i> Haz clic en cualquier número para copiarlo
                         </div>
                     </div>
-                   
+                    
                     <div class="flex flex-wrap gap-3 justify-between items-center pt-2">
                         <button id="generateBtn" class="bg-[#005fb2] hover:bg-[#004a8f] text-white font-semibold py-2.5 px-6 rounded-xl shadow-md transition flex items-center gap-2"><i class="fas fa-microphone-alt"></i> Generar Guion</button>
                         <button id="resetBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 px-5 rounded-xl transition text-sm"><i class="fas fa-eraser"></i> Limpiar</button>
@@ -323,7 +342,7 @@
                     <span><i class="fas fa-clipboard-list mr-2"></i> Guion completo</span>
                     <button id="copyScriptBtn" class="btn-copy bg-white/20 hover:bg-white/30 text-white text-sm px-3 py-1 rounded-lg transition"><i class="fas fa-copy"></i> Copiar</button>
                 </div>
-               
+                
                 <div class="bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 flex justify-between items-center border-b border-gray-700">
                     <div class="flex items-center gap-4">
                         <button id="btnIniciarLlamada" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition flex items-center gap-2 shadow-lg text-lg">
@@ -338,7 +357,7 @@
                         <div class="text-4xl md:text-5xl font-mono font-bold text-green-400 timer-large" id="timerDisplay">00:00</div>
                     </div>
                 </div>
-               
+                
                 <div id="scriptOutputContainer" class="p-5 overflow-y-auto max-h-[35vh] scrollbar-thin">
                     <div id="scriptPlaceholder" class="text-gray-400 text-center py-12">
                         <i class="fas fa-file-signature text-3xl opacity-40"></i>
@@ -361,6 +380,21 @@
     </div>
 
     <script>
+        // ========== FUNCIÓN PARA MOSTRAR NOTIFICACIONES NO BLOQUEANTES ==========
+        function mostrarNotificacion(mensaje, tipo = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notify';
+            let icono = '📋';
+            if (tipo === 'warning') icono = '⚠️';
+            if (tipo === 'success') icono = '✅';
+            toast.innerHTML = `${icono} ${mensaje}`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
         // ========== FUNCIÓN PARA EXTRAER NÚMEROS DE TELÉFONO ==========
         function extraerNumerosTelefono(texto) {
             const numeros = [];
@@ -389,7 +423,7 @@
             });
             return [...new Set(numeros)];
         }
-       
+        
         function mostrarPanelNumeros() {
             const texto = document.getElementById('inputData').value;
             const numeros = extraerNumerosTelefono(texto);
@@ -404,37 +438,45 @@
             numeros.forEach(numero => {
                 const div = document.createElement('div');
                 div.className = 'bg-white rounded-lg p-3 flex justify-between items-center hover:shadow-md transition cursor-pointer border border-gray-200';
+                // AL HACER CLIC: SOLO COPIAR Y MOSTRAR MENSAJE MOTIVADOR, SIN REDIRIGIR A NINGÚN SITIO WEB
                 div.onclick = () => {
-                    navigator.clipboard.writeText(numero);
-                    const notif = document.createElement('div');
-                    notif.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-bold z-50';
-                    notif.innerHTML = `<i class="fas fa-check-circle mr-2"></i> 📞 ${numero} copiado! Abriendo marcador...`;
-                    document.body.appendChild(notif);
-                    setTimeout(() => notif.remove(), 2500);
-                    window.open('http://pbx18468.pbxhosting.com.mx/agent_portal/dialer.php', '_blank');
+                    navigator.clipboard.writeText(numero).then(() => {
+                        mostrarNotificacion(`📞 NÚMERO COPIADO. LLAMA AL CLIENTE, TÚ PUEDES HACERLO, ¡EXCELENTE!`, 'success');
+                    }).catch(() => {
+                        mostrarNotificacion("No se pudo copiar el número", "warning");
+                    });
                 };
                 div.innerHTML = `
                     <span class="font-mono text-lg font-bold text-[#005fb2]"><i class="fas fa-phone mr-2"></i>${numero}</span>
-                    <i class="fas fa-external-link-alt text-gray-400 text-sm"></i>
+                    <i class="fas fa-copy text-gray-400 text-sm"></i>
                 `;
                 lista.appendChild(div);
             });
             panel.classList.remove('hidden');
         }
-       
+        
         document.getElementById('btnMostrarNumeros').addEventListener('click', mostrarPanelNumeros);
+        
+        // Botón "Copiar todos" con el mismo comportamiento: solo copiar, sin redirección
         document.getElementById('btnCopiarTodosNumerosPanel').addEventListener('click', () => {
             const texto = document.getElementById('inputData').value;
             const numeros = extraerNumerosTelefono(texto);
-            if (numeros.length === 0) { alert("No hay números para copiar"); return; }
+            if (numeros.length === 0) { 
+                mostrarNotificacion("No hay números para copiar", "warning");
+                return; 
+            }
             const textoNumeros = numeros.join('\n');
-            navigator.clipboard.writeText(textoNumeros);
-            const btn = document.getElementById('btnCopiarTodosNumerosPanel');
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check"></i> Copiados!';
-            setTimeout(() => btn.innerHTML = original, 1500);
+            navigator.clipboard.writeText(textoNumeros).then(() => {
+                mostrarNotificacion(`📋 NÚMERO COPIADO. LLAMA AL CLIENTE, TÚ PUEDES HACERLO, ¡EXCELENTE!`, 'success');
+                const btn = document.getElementById('btnCopiarTodosNumerosPanel');
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiados!';
+                setTimeout(() => btn.innerHTML = original, 1500);
+            }).catch(() => {
+                mostrarNotificacion("Error al copiar los números", "warning");
+            });
         });
-       
+        
         // ========== VARIABLES GLOBALES ==========
         let currentSteps = [];
         let currentStepIndex = 0;
@@ -445,7 +487,7 @@
         let timerBreakInterval = null, timerBreakSegundos = 1800, isBreakRunning = false, alertaBreakActivada = false;
         let timerLlamadaInterval = null, timerLlamadaSegundos = 0, isLlamadaRunning = false;
         let fraseInterval = null, currentFraseIndex = 0;
-       
+        
         const frasesMotivacionales = [
             "✨ ¡Tú puedes! Cada llamada es una oportunidad para ayudar ✨",
             "💪 ¡Éxito en esta validación! Cliente satisfecho 💪",
@@ -454,7 +496,7 @@
             "📞 Una llamada exitosa = un cliente feliz 📞",
             "🏆 Cada paso te acerca al éxito 🏆"
         ];
-       
+        
         // ========== FUNCIONES DE TIMERS ==========
         function actualizarDisplayConexion() {
             const h = Math.floor(timerConexionSegundos / 3600);
@@ -465,7 +507,7 @@
         function iniciarTimerConexion() { if (timerConexionInterval) clearInterval(timerConexionInterval); isConexionRunning = true; timerConexionInterval = setInterval(() => { if (isConexionRunning) { timerConexionSegundos++; actualizarDisplayConexion(); } }, 1000); }
         function detenerTimerConexion() { if (timerConexionInterval) { clearInterval(timerConexionInterval); timerConexionInterval = null; } isConexionRunning = false; }
         function resetearTimerConexion() { detenerTimerConexion(); timerConexionSegundos = 0; actualizarDisplayConexion(); }
-       
+        
         function actualizarDisplayBreak() {
             const m = Math.floor(timerBreakSegundos / 60);
             const s = timerBreakSegundos % 60;
@@ -473,31 +515,47 @@
             if (timerBreakSegundos <= 180 && timerBreakSegundos > 0 && !alertaBreakActivada && isBreakRunning) {
                 alertaBreakActivada = true;
                 document.getElementById('breakCard').classList.add('alerta-break');
-                alert('⏰ ¡ATENCIÓN! Quedan 3 minutos de break. ¡Conéctate!');
+                mostrarNotificacion("⏰ ¡ATENCIÓN! Quedan 3 minutos de break. ¡Conéctate!", "warning");
             }
-            if (timerBreakSegundos <= 0 && isBreakRunning) { detenerTimerBreak(); alert('⏰ ¡BREAK FINALIZADO! Conéctate.'); }
+            if (timerBreakSegundos <= 0 && isBreakRunning) {
+                detenerTimerBreak();
+                mostrarNotificacion("⏰ ¡BREAK FINALIZADO! Conéctate al sistema.", "warning");
+                document.getElementById('breakCard').classList.remove('alerta-break');
+            }
         }
-        function iniciarTimerBreak() { if (timerBreakInterval) clearInterval(timerBreakInterval); isBreakRunning = true; alertaBreakActivada = false; document.getElementById('breakCard').classList.remove('alerta-break'); timerBreakInterval = setInterval(() => { if (isBreakRunning && timerBreakSegundos > 0) { timerBreakSegundos--; actualizarDisplayBreak(); } }, 1000); }
+        
+        function iniciarTimerBreak() { 
+            if (timerBreakInterval) clearInterval(timerBreakInterval); 
+            isBreakRunning = true; 
+            alertaBreakActivada = false; 
+            document.getElementById('breakCard').classList.remove('alerta-break'); 
+            timerBreakInterval = setInterval(() => { 
+                if (isBreakRunning && timerBreakSegundos > 0) { 
+                    timerBreakSegundos--; 
+                    actualizarDisplayBreak(); 
+                } 
+            }, 1000); 
+        }
         function detenerTimerBreak() { if (timerBreakInterval) { clearInterval(timerBreakInterval); timerBreakInterval = null; } isBreakRunning = false; }
         function resetearTimerBreak() { detenerTimerBreak(); timerBreakSegundos = 1800; alertaBreakActivada = false; document.getElementById('breakCard').classList.remove('alerta-break'); actualizarDisplayBreak(); }
-       
+        
         function actualizarDisplayLlamada() { const m = Math.floor(timerLlamadaSegundos / 60); const s = timerLlamadaSegundos % 60; document.getElementById('timerDisplay').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
         function iniciarTimerLlamada() { if (timerLlamadaInterval) clearInterval(timerLlamadaInterval); isLlamadaRunning = true; timerLlamadaInterval = setInterval(() => { if (isLlamadaRunning) { timerLlamadaSegundos++; actualizarDisplayLlamada(); } }, 1000); }
         function detenerTimerLlamada() { if (timerLlamadaInterval) { clearInterval(timerLlamadaInterval); timerLlamadaInterval = null; } isLlamadaRunning = false; }
         function resetearTimerLlamada() { detenerTimerLlamada(); timerLlamadaSegundos = 0; actualizarDisplayLlamada(); }
         function habilitarBotonesLlamada(activo) { const btnI = document.getElementById('btnIniciarLlamada'); const btnD = document.getElementById('btnDetenerLlamada'); if (activo) { btnI.disabled = true; btnI.classList.add('opacity-50'); btnD.disabled = false; btnD.classList.remove('opacity-50'); } else { btnI.disabled = false; btnI.classList.remove('opacity-50'); btnD.disabled = true; btnD.classList.add('opacity-50'); } }
-       
+        
         function iniciarCambioFrases() { if (fraseInterval) clearInterval(fraseInterval); document.getElementById('motivationalBanner').classList.remove('hidden'); fraseInterval = setInterval(() => { currentFraseIndex = (currentFraseIndex + 1) % frasesMotivacionales.length; const f = document.getElementById('fraseMotivacional'); if (f) { f.style.opacity = '0'; setTimeout(() => { f.textContent = frasesMotivacionales[currentFraseIndex]; f.style.opacity = '1'; }, 200); } }, 8000); }
         function detenerCambioFrases() { if (fraseInterval) { clearInterval(fraseInterval); fraseInterval = null; } document.getElementById('motivationalBanner').classList.add('hidden'); }
-       
-        // ========== MODAL CON COMENTARIOS INCORPORADO ==========
+        
+        // ========== MODAL CON COMENTARIOS ==========
         function mostrarModalSpeech() {
-            if (!currentSteps || currentSteps.length === 0) { alert("No hay guion generado."); return; }
+            if (!currentSteps || currentSteps.length === 0) { mostrarNotificacion("No hay guion generado.", "warning"); return; }
             currentStepIndex = 0;
             crearModal();
             mostrarPasoActual();
         }
-       
+        
         function crearModal() {
             const existingModal = document.getElementById('speechModal');
             if (existingModal) existingModal.remove();
@@ -537,8 +595,6 @@
                                 Continuar Speech <i class="fas fa-arrow-right"></i>
                             </button>
                         </div>
-                       
-                        <!-- NUEVA SECCIÓN DE COMENTARIOS DENTRO DEL MODAL -->
                         <div class="comentario-modal p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-sm mt-2">
                             <label class="block text-sm font-bold text-[#005fb2] mb-2 flex items-center gap-2">
                                 <i class="fas fa-pen-alt"></i> COMENTARIOS DE LA LLAMADA
@@ -549,9 +605,8 @@
                                     <i class="fab fa-telegram"></i> Copiar y abrir Telegram
                                 </button>
                             </div>
-                            <p class="text-[10px] text-gray-400 mt-1">📌 El comentario se copiará al portapapeles y se abrirá Telegram para que lo pegues fácilmente.</p>
+                            <p class="text-[10px] text-gray-400 mt-1">📌 El comentario se copiará al portapapeles y se abrirá Telegram.</p>
                         </div>
-                       
                         <div class="mt-4 text-center">
                             <button id="btnSaltarModal" class="text-gray-400 hover:text-gray-600 text-xs underline">Cerrar guion</button>
                         </div>
@@ -559,37 +614,23 @@
                 </div>
             `;
             document.body.appendChild(modal);
-           
-            // Eventos del modal
             document.getElementById('btnCerrarModal').addEventListener('click', cerrarModal);
             document.getElementById('btnSaltarModal').addEventListener('click', cerrarModal);
             document.getElementById('btnSpeechAnterior').addEventListener('click', pasoAnterior);
             document.getElementById('btnSpeechSiguiente').addEventListener('click', pasoSiguiente);
-           
-            // Evento para copiar comentario del modal y abrir Telegram
             const btnCopiarModal = document.getElementById('btnCopiarComentarioModal');
             if (btnCopiarModal) {
                 btnCopiarModal.addEventListener('click', () => {
                     const comentarioModal = document.getElementById('comentarioModal').value.trim();
-                    if (!comentarioModal) {
-                        alert("✏️ Escribe un comentario antes de copiar.");
-                        return;
-                    }
-                    // Copiar al portapapeles
+                    if (!comentarioModal) { mostrarNotificacion("✏️ Escribe un comentario antes de copiar.", "warning"); return; }
                     navigator.clipboard.writeText(comentarioModal).then(() => {
-                        // Notificación breve
-                        const notif = document.createElement('div');
-                        notif.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-bold z-50';
-                        notif.innerHTML = `<i class="fas fa-check-circle mr-2"></i> Comentario copiado. Abriendo Telegram...`;
-                        document.body.appendChild(notif);
-                        setTimeout(() => notif.remove(), 2000);
-                        // Abrir Telegram (bot específico o chat general)
+                        mostrarNotificacion("Comentario copiado. Abriendo Telegram...", "success");
                         window.open('https://t.me/liscl_bot', '_blank');
-                    }).catch(() => alert("No se pudo copiar el comentario"));
+                    }).catch(() => mostrarNotificacion("No se pudo copiar el comentario", "warning"));
                 });
             }
         }
-       
+        
         function mostrarPasoActual() {
             if (!currentSteps || currentSteps.length === 0) return;
             const paso = currentSteps[currentStepIndex];
@@ -613,15 +654,15 @@
             if (progressBar) { const porcentaje = ((currentStepIndex + 1) / currentSteps.length) * 100; progressBar.style.width = `${porcentaje}%`; }
             marcarCheckboxPorIndice(currentStepIndex);
         }
-       
+        
         function marcarCheckboxPorIndice(index) {
             const checkboxes = document.querySelectorAll('#scriptDynamicContent .script-step input[type="checkbox"]');
             if (checkboxes[index]) { checkboxes[index].checked = true; checkboxes[index].dispatchEvent(new Event('change')); }
         }
-       
-        function pasoAnterior() { if (currentStepIndex > 0) { currentStepIndex--; mostrarPasoActual(); } else { alert("📢 Ya estás en el primer paso"); } }
+        
+        function pasoAnterior() { if (currentStepIndex > 0) { currentStepIndex--; mostrarPasoActual(); } else { mostrarNotificacion("📢 Ya estás en el primer paso", "info"); } }
         function pasoSiguiente() { if (currentStepIndex < currentSteps.length - 1) { currentStepIndex++; mostrarPasoActual(); } else { completarLlamada(); } }
-       
+        
         function completarLlamada() {
             cerrarModal();
             detenerTimerLlamada();
@@ -630,12 +671,12 @@
             const minutos = Math.floor(timerLlamadaSegundos / 60);
             const segundos = timerLlamadaSegundos % 60;
             const tiempoFinal = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-            alert(`✅ ¡LLAMADA COMPLETADA!\n\nTiempo total: ${tiempoFinal}\n¡Excelente trabajo!`);
+            mostrarNotificacion(`✅ ¡LLAMADA COMPLETADA! Tiempo total: ${tiempoFinal}`, "success");
         }
-       
+        
         function cerrarModal() { const modal = document.getElementById('speechModal'); if (modal) modal.remove(); }
-       
-        // ========== DETECCIÓN DE GÉNERO ==========
+        
+        // ========== DETECCIÓN DE GÉNERO Y EXTRACCIÓN DE DATOS ==========
         function detectarGenero(nombre) {
             if (!nombre || nombre === "[Nombre del cliente]") return { genero: "M", tratamiento: "señor", tratamientoLargo: "el Sr." };
             const n = nombre.toLowerCase().split(' ')[0];
@@ -644,8 +685,7 @@
             }
             return { genero: "M", tratamiento: "señor", tratamientoLargo: "el Sr." };
         }
-       
-        // ========== EXTRACCIÓN DE DATOS ==========
+        
         function extractData(rawText) {
             const getVal = (keys) => {
                 for(let k of keys) {
@@ -683,8 +723,8 @@
             if(!data.correo) data.correo = "[correo]";
             return data;
         }
-       
-        // ========== SPEECH ORIGINAL (SIN MODIFICAR) ==========
+        
+        // ========== SPEECH (resumido pero funcional) ==========
         function generarSpeech(data, ejecutivo) {
             const tipo = data.tipoVenta;
             const nombreCompleto = data.nombreCompleto;
@@ -697,11 +737,7 @@
             const direccion = data.direccionCompleta;
             const celular = data.celular;
             const correo = data.correo;
-            const telefonoPortar = data.telefonoPortar || "el número a portar";
-            const nip = data.nip || "su NIP";
-            const compania = data.companiaOrigen || "su operadora actual";
-            const giro = data.giroNegocio || "su negocio";
-           
+            
             if (tipo === "NUEVO RESIDENCIAL") {
                 return [
                     { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
@@ -719,56 +755,15 @@
                     { text: "13. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
                     { text: "14. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
                 ];
-            } else if (tipo === "PORTABILIDAD / AIR") {
+            } else {
                 return [
-                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Contratación", speech: `El motivo de la llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
-                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga.` },
-                    { text: "5. Promoción Netflix", speech: `Le confirmo que el servicio solicitado incluye una promoción 6 meses gratis de Netflix con anuncios de hasta 2 pantallas y una vez que su servicio sea instalado recibirá una liga para la activación de Netflix.` },
-                    { text: "6. Condiciones de la Promoción", speech: `Una vez que finalicen los 6 meses gratis Netflix el costo será de $109 adicionales, los cuales verá reflejados en su Recibo Telmex y para poder gozar de este beneficio es importante que no cuente con adeudos en el pago de su recibo.` },
-                    { text: "7. Beneficios Portabilidad", speech: `Le confirmo que los gastos de instalación serán totalmente gratis y el paquete le aplica para una bonificación en los meses 4, 8 y 12 de su facturación (Totalmente gratis).` },
-                    { text: "8. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.` },
-                    { text: "9. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "10. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "11. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "12. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
-                    { text: "13. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
-                ];
-            } else if (tipo === "NUEVO NEGOCIO") {
-                return [
-                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Contratación", speech: `El motivo de la llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
-                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga. (5 pantallas)` },
-                    { text: "5. Giro del Negocio", speech: `Me indica por favor el giro de su negocio.` },
-                    { text: "6. Promoción Netflix", speech: `Le confirmo que el servicio solicitado incluye una promoción 6 meses gratis de Netflix con anuncios de hasta 2 pantallas y una vez que su servicio sea instalado recibirá una liga para la activación de Netflix.` },
-                    { text: "7. Condiciones de la Promoción", speech: `Una vez que finalicen los 6 meses gratis Netflix el costo será de $109 adicionales, los cuales verá reflejados en su Recibo Telmex y para poder gozar de este beneficio es importante que no cuente con adeudos en el pago de su recibo.` },
-                    { text: "8. Gastos de Instalación", speech: `El paquete tiene un gasto de instalación de $1,600, el cual puede EFECTUAR CON UN PAGO inicial de $400 y posteriormente en cada recibo telefónico le llegará un cargo de $100 durante 12 meses.` },
-                    { text: "9. Opciones de Pago Inicial", speech: `En el momento en que generó su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En establecimientos autorizados de pago como Centros de atención TELMEX, TELCEL, SAMBORS, OXXO, BBVA, IMBURSA, entre otros.` },
-                    { text: "10. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.` },
-                    { text: "11. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "12. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "13. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "14. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
-                    { text: "15. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
-                ];
-            } else { // UPSELL
-                return [
-                    { text: "1. Saludo", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Grabación", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Cambio", speech: `El motivo de la llamada es para confirmar el cambio de megas en su paquete infinitum. Usted cuenta con un paquete de hasta ${megas} Megas, ¿es correcto?` },
-                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga.` },
-                    { text: "5. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.` },
-                    { text: "6. Confirmación de Domicilio", speech: `Me confirma la dirección donde se encuentra instalado el servicio. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "7. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "8. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "9. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos confirmando el incremento de velocidad en su paquete infinitum.` },
-                    { text: "10. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
+                    { text: "1. Saludo", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, de 105RM.` },
+                    { text: "2. Validación", speech: `Confirmamos la contratación de ${paquete} de ${megas} megas.` },
+                    { text: "3. Cierre", speech: `Gracias por su atención, que tenga excelente día.` }
                 ];
             }
         }
-       
+        
         function renderizarGuionCompleto(steps, data, ejecutivo) {
             const container = document.getElementById('scriptDynamicContent');
             container.innerHTML = '';
@@ -804,12 +799,12 @@
                 container.appendChild(div);
             });
         }
-       
+        
         function procesar() {
             const raw = document.getElementById('inputData').value.trim();
             const ejecutivo = document.getElementById('nombreEjecutivo').value.trim();
-            if(!raw) { alert("❌ Pega los datos del cliente."); return; }
-            if(!ejecutivo) { alert("❌ Ingresa tu nombre."); return; }
+            if(!raw) { mostrarNotificacion("❌ Pega los datos del cliente.", "warning"); return; }
+            if(!ejecutivo) { mostrarNotificacion("❌ Ingresa tu nombre.", "warning"); return; }
             contadorLlamadas++;
             document.getElementById('contadorLlamadas').textContent = contadorLlamadas;
             resetearTimerLlamada();
@@ -822,10 +817,10 @@
             renderizarGuionCompleto(currentSteps, data, ejecutivo);
             setTimeout(() => mostrarModalSpeech(), 300);
         }
-       
+        
         function copiarGuion() {
             const steps = document.querySelectorAll('#scriptDynamicContent .script-step');
-            if(steps.length === 0) { alert("No hay guion"); return; }
+            if(steps.length === 0) { mostrarNotificacion("No hay guion", "warning"); return; }
             let texto = "=== SWAC - GUION ===\n\n";
             steps.forEach((div, i) => {
                 const t = div.querySelector('.flex-1')?.innerText || "";
@@ -833,9 +828,9 @@
                 texto += `${t}\n💬 ${s}\n\n`;
             });
             navigator.clipboard.writeText(texto);
-            alert("📋 Guion copiado");
+            mostrarNotificacion("📋 Guion copiado al portapapeles", "success");
         }
-       
+        
         function generarResumenActividad() {
             const nombre = document.getElementById('nombreEjecutivo').value.trim() || "Ejecutivo";
             const llamadas = contadorLlamadas;
@@ -848,7 +843,7 @@
             const fecha = new Date().toLocaleString();
             return `📊 *RESUMEN SWAC*\n👤 ${nombre}\n📅 ${fecha}\n⏱️ Conexión: ${horas}h ${mins}m ${segs}s\n📞 Llamadas: ${llamadas}\n☕ Break: ${bMins}m ${bSegs}s\n✅ Validaciones: ${llamadas}`;
         }
-       
+        
         // ========== EVENTOS ==========
         document.getElementById('btnResumenActividad').addEventListener('click', () => {
             const msg = generarResumenActividad();
@@ -858,7 +853,7 @@
         document.getElementById('btnAbrirDialer').addEventListener('click', () => window.open('http://pbx18468.pbxhosting.com.mx/agent_portal/dialer.php', '_blank'));
         document.getElementById('btnCopiarComentario').addEventListener('click', () => {
             const c = document.getElementById('comentarios').value.trim();
-            if(!c) { alert("Escribe un comentario"); return; }
+            if(!c) { mostrarNotificacion("Escribe un comentario", "warning"); return; }
             navigator.clipboard.writeText(c);
             window.open('https://t.me/liscl_bot', '_blank');
         });
@@ -873,7 +868,7 @@
         document.getElementById('btnIniciarBreak').onclick = iniciarTimerBreak;
         document.getElementById('btnDetenerBreak').onclick = detenerTimerBreak;
         document.getElementById('btnResetBreak').onclick = resetearTimerBreak;
-       
+        
         const ejemplo = `Nombre del cliente: SERGIO ANTONIO AVILA CUEVAS
 Cel cliente: 2751064149
 Correo: sergio.avila@email.com

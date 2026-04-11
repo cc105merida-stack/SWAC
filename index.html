@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>SWAC | Sistema Web de Atención al Cliente - 105RM</title>
-    <!-- FAVICON -->
-    <link rel="icon" type="image/jpeg" href="https://i.pinimg.com/736x/9b/a9/5a/9ba95a07aeaf32052a9e770f3128705d.jpg">
-    <link rel="shortcut icon" type="image/jpeg" href="https://i.pinimg.com/736x/9b/a9/5a/9ba95a07aeaf32052a9e770f3128705d.jpg">
+    <!-- FAVICON actualizado -->
+    <link rel="icon" type="image/jpeg" href="https://i.pinimg.com/736x/16/71/90/16719070ba26c45eb14ddf3f3d4fc69c.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="https://i.pinimg.com/736x/16/71/90/16719070ba26c45eb14ddf3f3d4fc69c.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -195,11 +195,11 @@
 <body class="p-4 md:p-6">
 
     <div class="max-w-[1600px] mx-auto">
-        <!-- ENCABEZADO CON LOGO Y NOMBRE SWAC -->
+        <!-- ENCABEZADO CON LOGO Y NOMBRE SWAC - LOGO ACTUALIZADO -->
         <div class="flex flex-wrap justify-between items-center mb-6 gap-3 bg-white rounded-2xl shadow-md p-4 border border-gray-100">
             <div class="flex items-center gap-4">
                 <div id="logoContainer" class="w-16 h-16 bg-[#005fb2]/10 rounded-xl flex items-center justify-center overflow-hidden shadow-sm border border-gray-200">
-                    <img src="https://i.pinimg.com/736x/9b/a9/5a/9ba95a07aeaf32052a9e770f3128705d.jpg" alt="Logo SWAC" class="logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-headset text-3xl text-[#005fb2]\'></i>';">
+                    <img src="https://i.pinimg.com/736x/16/71/90/16719070ba26c45eb14ddf3f3d4fc69c.jpg" alt="Logo SWAC" class="logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-headset text-3xl text-[#005fb2]\'></i>';">
                 </div>
                 <div>
                     <h1 class="text-2xl md:text-3xl font-bold text-[#005fb2]">📋 SWAC</h1>
@@ -301,7 +301,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Ficha del cliente (texto libre)</label>
-                        <textarea id="inputData" rows="6" class="w-full border border-gray-300 rounded-xl p-4 font-mono text-sm bg-gray-50 focus:ring-2 focus:ring-[#005fb2]" placeholder="Ejemplo:&#10;Nombre del cliente: JUAN PEREZ&#10;Promoción: Netflix&#10;Paquete: 389 Megas: 120&#10;..."></textarea>
+                        <textarea id="inputData" rows="6" class="w-full border border-gray-300 rounded-xl p-4 font-mono text-sm bg-gray-50 focus:ring-2 focus:ring-[#005fb2]" placeholder="Ejemplo:&#10;Nombre del cliente: JUAN PEREZ&#10;Promoción: Netflix&#10;Beneficio domiciliación: 10% de descuento&#10;Paquete: 389 Megas: 120&#10;..."></textarea>
                     </div>
                     
                     <!-- BOTÓN NÚMEROS A LLAMAR -->
@@ -555,7 +555,7 @@
             return { genero: "M", tratamiento: "señor", tratamientoLargo: "el Sr." };
         }
         
-        // ========== EXTRACCIÓN DE DATOS (INCLUYE PROMOCIÓN) ==========
+        // ========== EXTRACCIÓN DE DATOS (INCLUYE PROMOCIÓN Y BENEFICIOS DOMICILIACIÓN) ==========
         function extractData(rawText) {
             const getVal = (keys) => {
                 for(let k of keys) {
@@ -573,10 +573,27 @@
             else if (promoLower.includes("hbo")) promocion = "HBO Max";
             else if (promoLower.includes("f1") || promoLower.includes("f1tv")) promocion = "F1 TV";
             else {
-                // Intentar extraer campo específico
                 promocion = getVal(["promoción", "promocion", "servicio incluido", "beneficio"]);
             }
-            if (!promocion) promocion = "Netflix"; // por defecto
+            if (!promocion) promocion = "Netflix";
+            
+            // Detectar beneficios por domiciliación
+            let domiciliacionBeneficio = false;
+            let textoBeneficioDomiciliacion = "";
+            const lowerText = rawText.toLowerCase();
+            if (lowerText.includes("domiciliación") || lowerText.includes("domiciliacion") || lowerText.includes("pago automático") || lowerText.includes("beneficio por domiciliar")) {
+                domiciliacionBeneficio = true;
+                const lines = rawText.split(/\r?\n/);
+                for (let line of lines) {
+                    if (line.toLowerCase().includes("domiciliación") || line.toLowerCase().includes("domiciliacion") || line.toLowerCase().includes("pago automático")) {
+                        textoBeneficioDomiciliacion = line.trim();
+                        break;
+                    }
+                }
+                if (!textoBeneficioDomiciliacion) {
+                    textoBeneficioDomiciliacion = "Beneficios por domiciliación de pagos (consulte términos)";
+                }
+            }
             
             const data = {
                 nombreCompleto: getVal(["nombre del cliente", "cliente", "nombre cliente", "nombre"]),
@@ -591,7 +608,9 @@
                 giroNegocio: getVal(["giro del negocio", "giro negocio"]),
                 direccionCompleta: direccionMatch ? direccionMatch[1].trim() : "[dirección no proporcionada]",
                 tipoVenta: "NUEVO RESIDENCIAL",
-                promocion: promocion
+                promocion: promocion,
+                domiciliacionBeneficio: domiciliacionBeneficio,
+                textoBeneficioDomiciliacion: textoBeneficioDomiciliacion
             };
             data.primerNombre = data.nombreCompleto.split(' ')[0];
             const lower = rawText.toLowerCase();
@@ -607,7 +626,7 @@
             return data;
         }
         
-        // ========== GENERACIÓN DE SPEECH CON PROMOCIÓN DINÁMICA ==========
+        // ========== GENERACIÓN DE SPEECH CON PROMOCIÓN Y PRECIOS CORRECTOS ==========
         function generarSpeech(data, ejecutivo) {
             const tipo = data.tipoVenta;
             const nombreCompleto = data.nombreCompleto;
@@ -620,28 +639,34 @@
             const direccion = data.direccionCompleta;
             const celular = data.celular;
             const correo = data.correo;
-            const promocion = data.promocion; // Netflix, HBO Max o F1 TV
+            const promocion = data.promocion;
             
-            // Texto promocional según el servicio
+            // Precios actualizados
             let textoPromocion = "";
             let textoCondiciones = "";
             if (promocion === "Netflix") {
                 textoPromocion = `Le confirmo que el servicio solicitado incluye una promoción 6 meses gratis de Netflix con anuncios de hasta 2 pantallas y una vez que su servicio sea instalado recibirá una liga para la activación de Netflix.`;
-                textoCondiciones = `Una vez que finalicen los 6 meses gratis Netflix el costo será de $109 adicionales, los cuales verá reflejados en su Recibo Telmex y para poder gozar de este beneficio es importante que no cuente con adeudos en el pago de su recibo.`;
+                textoCondiciones = `Una vez que finalicen los 6 meses gratis, el costo de Netflix será de $109 adicionales, los cuales verá reflejados en su Recibo Telmex. Para poder gozar de este beneficio es importante que no cuente con adeudos en el pago de su recibo.`;
             } else if (promocion === "HBO Max") {
                 textoPromocion = `Le confirmo que el servicio solicitado incluye una promoción 6 meses gratis de HBO Max (contenido exclusivo) y una vez que su servicio sea instalado recibirá una liga para la activación de HBO Max.`;
-                textoCondiciones = `Una vez que finalicen los 6 meses gratis, el costo de HBO Max será de $129 adicionales, los cuales verá reflejados en su Recibo Telmex.`;
+                textoCondiciones = `Una vez que finalicen los 6 meses gratis, el costo de HBO Max será de $119 adicionales, los cuales verá reflejados en su Recibo Telmex.`;
             } else if (promocion === "F1 TV") {
                 textoPromocion = `Le confirmo que el servicio solicitado incluye una promoción 6 meses gratis de F1 TV Pro (acceso a todas las carreras en vivo) y una vez instalado el servicio recibirá una liga para la activación.`;
-                textoCondiciones = `Al terminar los 6 meses gratis, el costo de F1 TV será de $149 mensuales adicionales, reflejados en su recibo Telmex.`;
+                textoCondiciones = `Al terminar los 6 meses gratis, el costo de F1 TV será de $119 mensuales adicionales, reflejados en su recibo Telmex.`;
             } else {
                 textoPromocion = `Le confirmo que el servicio solicitado incluye una promoción de 6 meses gratis de ${promocion} (beneficio exclusivo) y recibirá una liga para su activación.`;
                 textoCondiciones = `Posterior a los 6 meses, el costo del servicio adicional será de acuerdo a la tarifa vigente de ${promocion}.`;
             }
             
-            // Guion base común para todos los tipos (se personaliza según la promoción)
+            // Texto de domiciliación con beneficios si aplica
+            let textoDomiciliacion = `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.`;
+            if (data.domiciliacionBeneficio && data.textoBeneficioDomiciliacion) {
+                textoDomiciliacion = `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura. Además, le informo que de acuerdo a la información de su solicitud, usted cuenta con beneficios adicionales por domiciliación de pagos: "${data.textoBeneficioDomiciliacion}". Para activar este beneficio, puede realizar la domiciliación en la aplicación MI TELMEX.`;
+            }
+            
+            // Base del guion según tipo de venta (se mantiene la estructura anterior con los textos actualizados)
             if (tipo === "NUEVO RESIDENCIAL") {
-                return [
+                let steps = [
                     { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
                     { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
                     { text: "3. Confirmación de Contratación", speech: `El motivo de la llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
@@ -649,32 +674,38 @@
                     { text: "5. Promoción Incluida", speech: textoPromocion },
                     { text: "6. Condiciones de la Promoción", speech: textoCondiciones },
                     { text: "7. Gastos de Instalación", speech: `El paquete (por ser cliente nuevo) tiene un gasto de instalación de $1,600, el cual puede EFECTUAR CON UN PAGO inicial de $400 y posteriormente en cada recibo le llegará un cargo de $100 durante 12 meses.` },
-                    { text: "8. Opciones de Pago Inicial", speech: `En el momento en que generó su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En establecimientos autorizados de pago como Centros de atención TELMEX, TELCEL, SAMBORS, OXXO, BBVA, IMBURSA, entre otros.` },
-                    { text: "9. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.` },
+                    { text: "8. Opciones de Pago Inicial", speech: `En el momento en que generó su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En establecimientos autorizados de pago como Centros de atención TELMEX, TELCEL, SAMBORS, OXXO, BBVA, IMBURSA, entre otros.` }
+                ];
+                steps.push({ text: "9. Domiciliación y Beneficios", speech: textoDomiciliacion });
+                steps.push(
                     { text: "10. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
                     { text: "11. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
                     { text: "12. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
                     { text: "13. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
                     { text: "14. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
-                ];
+                );
+                return steps;
             } else if (tipo === "PORTABILIDAD / AIR") {
-                return [
+                let steps = [
                     { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
                     { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
                     { text: "3. Confirmación de Contratación", speech: `El motivo de la llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
                     { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga.` },
                     { text: "5. Promoción Incluida", speech: textoPromocion },
                     { text: "6. Condiciones de la Promoción", speech: textoCondiciones },
-                    { text: "7. Beneficios Portabilidad", speech: `Le confirmo que los gastos de instalación serán totalmente gratis y el paquete le aplica para una bonificación en los meses 4, 8 y 12 de su facturación (Totalmente gratis).` },
-                    { text: "8. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.` },
+                    { text: "7. Beneficios Portabilidad", speech: `Le confirmo que los gastos de instalación serán totalmente gratis y el paquete le aplica para una bonificación en los meses 4, 8 y 12 de su facturación (Totalmente gratis).` }
+                ];
+                steps.push({ text: "8. Domiciliación y Beneficios", speech: textoDomiciliacion });
+                steps.push(
                     { text: "9. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
                     { text: "10. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
                     { text: "11. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
                     { text: "12. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
                     { text: "13. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
-                ];
+                );
+                return steps;
             } else if (tipo === "NUEVO NEGOCIO") {
-                return [
+                let steps = [
                     { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
                     { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
                     { text: "3. Confirmación de Contratación", speech: `El motivo de la llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
@@ -683,27 +714,37 @@
                     { text: "6. Promoción Incluida", speech: textoPromocion },
                     { text: "7. Condiciones de la Promoción", speech: textoCondiciones },
                     { text: "8. Gastos de Instalación", speech: `El paquete tiene un gasto de instalación de $1,600, el cual puede EFECTUAR CON UN PAGO inicial de $400 y posteriormente en cada recibo telefónico le llegará un cargo de $100 durante 12 meses.` },
-                    { text: "9. Opciones de Pago Inicial", speech: `En el momento en que generó su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En establecimientos autorizados de pago como Centros de atención TELMEX, TELCEL, SAMBORS, OXXO, BBVA, IMBURSA, entre otros.` },
-                    { text: "10. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.` },
+                    { text: "9. Opciones de Pago Inicial", speech: `En el momento en que generó su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En establecimientos autorizados de pago como Centros de atención TELMEX, TELCEL, SAMBORS, OXXO, BBVA, IMBURSA, entre otros.` }
+                ];
+                steps.push({ text: "10. Domiciliación y Beneficios", speech: textoDomiciliacion });
+                steps.push(
                     { text: "11. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
                     { text: "12. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
                     { text: "13. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
                     { text: "14. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
                     { text: "15. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
-                ];
+                );
+                return steps;
             } else { // UPSELL
-                return [
+                let steps = [
                     { text: "1. Saludo", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
                     { text: "2. Aviso de Grabación", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
                     { text: "3. Confirmación de Cambio", speech: `El motivo de la llamada es para confirmar el cambio de megas en su paquete infinitum. Usted cuenta con un paquete de hasta ${megas} Megas, ¿es correcto?` },
-                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga.` },
-                    { text: "5. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.` },
+                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga.` }
+                ];
+                if (data.domiciliacionBeneficio) {
+                    steps.push({ text: "5. Domiciliación y Beneficios", speech: textoDomiciliacion });
+                } else {
+                    steps.push({ text: "5. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.` });
+                }
+                steps.push(
                     { text: "6. Confirmación de Domicilio", speech: `Me confirma la dirección donde se encuentra instalado el servicio. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
                     { text: "7. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
                     { text: "8. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
                     { text: "9. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos confirmando el incremento de velocidad en su paquete infinitum.` },
                     { text: "10. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
-                ];
+                );
+                return steps;
             }
         }
         
@@ -729,7 +770,7 @@
                 const speech = document.createElement('div');
                 speech.className = 'mt-1 pl-6 text-[#005fb2] font-medium bg-blue-50 p-1 rounded text-xs';
                 let textoFinal = step.speech;
-                const vars = [data.nombreCompleto, data.primerNombre, ejecutivo, data.paquete, data.megas, data.costoMensual, data.direccionCompleta, data.celular, data.correo, data.promocion];
+                const vars = [data.nombreCompleto, data.primerNombre, ejecutivo, data.paquete, data.megas, data.costoMensual, data.direccionCompleta, data.celular, data.correo, data.promocion, data.textoBeneficioDomiciliacion];
                 for(let valor of vars) {
                     if(valor && valor.length > 2 && !valor.includes("[")) {
                         const regex = new RegExp(`(${valor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
@@ -835,7 +876,7 @@
             if (speechText) {
                 let textoResaltado = paso.speech;
                 if (currentData) {
-                    const vars = [currentData.nombreCompleto, currentData.primerNombre, currentEjecutivo, currentData.paquete, currentData.megas, currentData.costoMensual, currentData.direccionCompleta, currentData.celular, currentData.correo, currentData.promocion];
+                    const vars = [currentData.nombreCompleto, currentData.primerNombre, currentEjecutivo, currentData.paquete, currentData.megas, currentData.costoMensual, currentData.direccionCompleta, currentData.celular, currentData.correo, currentData.promocion, currentData.textoBeneficioDomiciliacion];
                     for(let valor of vars) {
                         if(valor && valor.length > 2 && !valor.includes("[")) {
                             const regex = new RegExp(`(${valor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
@@ -946,7 +987,8 @@ Cel cliente: 2751064149
 Correo: sergio.avila@email.com
 Domicilio: RIO CHIUATLAN 1010, Colonia LAS ÁGUILAS, ZAPOPAN CP 45080
 Paquete: 389 Megas: 120
-Promoción: Netflix`;
+Promoción: Netflix
+Beneficio domiciliación: 10% de descuento en mensualidad por 6 meses al activar pago automático`;
         document.getElementById('inputData').value = ejemplo;
     </script>
 </body>

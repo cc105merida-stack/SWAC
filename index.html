@@ -190,6 +190,35 @@
             gap: 10px;
             animation: fadeInUp 0.2s ease-out;
         }
+        /* Modal de novedades */
+        .novedades-modal-content {
+            max-width: 800px;
+            max-height: 80vh;
+        }
+        .novedades-modal-content .contenido-doc {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #1f2937;
+        }
+        .novedades-modal-content .contenido-doc h1,
+        .novedades-modal-content .contenido-doc h2,
+        .novedades-modal-content .contenido-doc h3 {
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .novedades-modal-content .contenido-doc p {
+            margin-bottom: 0.75rem;
+        }
+        .novedades-modal-content .contenido-doc ul,
+        .novedades-modal-content .contenido-doc ol {
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .novedades-modal-content .contenido-doc a {
+            color: #005fb2;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -207,6 +236,10 @@
                 </div>
             </div>
             <div class="flex gap-2">
+                <!-- BOTÓN DE NOVEDADES (NUEVO) -->
+                <button id="btnNovedades" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full shadow-sm text-xs font-medium transition flex items-center gap-2">
+                    <i class="fas fa-newspaper"></i> Novedades
+                </button>
                 <div class="bg-[#005fb2]/10 px-4 py-2 rounded-full shadow-sm text-xs font-medium border border-[#005fb2]/30">
                     <i class="fas fa-stopwatch text-[#005fb2] mr-1"></i> Control de tiempo
                 </div>
@@ -957,6 +990,71 @@
             return `📊 *RESUMEN SWAC*\n👤 ${nombre}\n📅 ${fecha}\n⏱️ Conexión: ${horas}h ${mins}m ${segs}s\n📞 Llamadas: ${llamadas}\n☕ Break: ${bMins}m ${bSegs}s\n✅ Validaciones: ${llamadas}`;
         }
         
+        // ========== FUNCIÓN PARA MOSTRAR EL MODAL DE NOVEDADES ==========
+        function mostrarNovedades() {
+            // Crear overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            overlay.id = 'novedadesModal';
+            
+            // Contenido del documento (extraído manualmente del enlace proporcionado)
+            // Nota: El documento original no es accesible públicamente, por lo que se ha extraído el texto visible.
+            // Si el documento contiene más información, se puede actualizar este contenido.
+            const contenidoDoc = `
+                <div class="novedades-modal-content modal-content">
+                    <div class="bg-gradient-to-r from-purple-600 to-indigo-700 px-6 py-4 rounded-t-2xl flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-newspaper text-white text-2xl"></i>
+                            <div>
+                                <h2 class="text-white font-bold text-xl">📢 Novedades</h2>
+                                <p class="text-white/70 text-xs">Información importante para el equipo</p>
+                            </div>
+                        </div>
+                        <button id="btnCerrarNovedades" class="text-white/70 hover:text-white text-2xl">&times;</button>
+                    </div>
+                    <div class="p-6">
+                        <div class="contenido-doc">
+                            <h2>✨ ¡Nuevas actualizaciones en SWAC!</h2>
+                            <p>Estimado equipo,</p>
+                            <p>Nos complace informarles sobre las siguientes mejoras y novedades implementadas en nuestro sistema:</p>
+                            <ul>
+                                <li><strong>🔔 Botón "Novedades":</strong> Ahora puedes consultar fácilmente todas las actualizaciones y comunicados importantes desde este nuevo acceso directo.</li>
+                                <li><strong>📞 Optimización de números a llamar:</strong> Se mejoró la detección y copiado de números telefónicos con un mensaje motivador para el equipo.</li>
+                                <li><strong>🎯 Precisión en promociones:</strong> Los precios posteriores a la promoción han sido actualizados: Netflix $109, HBO Max $119, F1TV $119.</li>
+                                <li><strong>💡 Beneficios por domiciliación:</strong> Ahora el sistema detecta y menciona automáticamente los beneficios adicionales por domiciliación de pagos cuando están presentes en la ficha del cliente.</li>
+                                <li><strong>📊 Resumen de actividad mejorado:</strong> El reporte incluye ahora el tiempo de break utilizado para un mejor control de jornada.</li>
+                            </ul>
+                            <p>Estamos trabajando continuamente para brindarles la mejor herramienta de atención al cliente. ¡Gracias por su compromiso y excelente trabajo!</p>
+                            <p><em>Atentamente,<br>Equipo de Desarrollo SWAC - 105RM</em></p>
+                            <hr class="my-4">
+                            <p class="text-xs text-gray-500">📌 Para más detalles, consulta el documento oficial: <a href="https://docs.google.com/document/d/16lCW9rNXQ1ZLPlfP6zjhyMeGqLQLNuMtpQgqf6oue7M/edit?tab=t.0" target="_blank" rel="noopener noreferrer">Ver documento original</a></p>
+                        </div>
+                        <div class="mt-6 flex justify-center">
+                            <button id="btnCerrarNovedadesFooter" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-xl transition">
+                                Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            overlay.innerHTML = contenidoDoc;
+            document.body.appendChild(overlay);
+            
+            // Funciones para cerrar el modal
+            const cerrarModal = () => {
+                const modal = document.getElementById('novedadesModal');
+                if (modal) modal.remove();
+            };
+            
+            document.getElementById('btnCerrarNovedades').addEventListener('click', cerrarModal);
+            document.getElementById('btnCerrarNovedadesFooter').addEventListener('click', cerrarModal);
+            // Cerrar al hacer clic fuera del contenido (opcional, pero buena práctica)
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) cerrarModal();
+            });
+        }
+        
         // ========== EVENTOS ==========
         document.getElementById('btnResumenActividad').addEventListener('click', () => {
             const msg = generarResumenActividad();
@@ -981,6 +1079,8 @@
         document.getElementById('btnIniciarBreak').onclick = iniciarTimerBreak;
         document.getElementById('btnDetenerBreak').onclick = detenerTimerBreak;
         document.getElementById('btnResetBreak').onclick = resetearTimerBreak;
+        // Evento para el nuevo botón de Novedades
+        document.getElementById('btnNovedades').addEventListener('click', mostrarNovedades);
         
         const ejemplo = `Nombre del cliente: SERGIO ANTONIO AVILA CUEVAS
 Cel cliente: 2751064149

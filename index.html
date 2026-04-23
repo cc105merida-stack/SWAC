@@ -658,17 +658,17 @@
             let textoPromocion = "";
             let textoCondiciones = "";
             if (promocion === "Netflix") {
-                textoPromocion = `Le confirmo que el servicio solicitado incluye una promoción 6 meses gratis de Netflix con anuncios de hasta 2 pantallas y una vez que su servicio sea instalado recibirá una liga para la activación de Netflix.`;
-                textoCondiciones = `Una vez que finalicen los 6 meses gratis, el costo de Netflix será de $109 adicionales, los cuales verá reflejados en su Recibo Telmex. Para poder gozar de este beneficio es importante que no cuente con adeudos en el pago de su recibo.`;
+                textoPromocion = `El servicio solicitado incluye la promoción de 6 meses gratis de Netflix con anuncios de hasta 2 pantallas y una vez que su servicio sea instalado recibirá una liga para la activación del mismo.`;
+                textoCondiciones = `Finalizados los 6 meses gratis, el costo de Netflix será de $109 adicionales, que verá reflejados en su Recibo Telmex. Para poder disfrutar del beneficio es importante que no cuente con adeudos en el pago de su recibo.`;
             } else if (promocion === "HBO Max") {
-                textoPromocion = `Le confirmo que el servicio solicitado incluye una promoción 6 meses gratis de HBO Max (contenido exclusivo) y una vez que su servicio sea instalado recibirá una liga para la activación de HBO Max.`;
-                textoCondiciones = `Una vez que finalicen los 6 meses gratis, el costo de HBO Max será de $119 adicionales, los cuales verá reflejados en su Recibo Telmex.`;
+                textoPromocion = `El servicio solicitado incluye una promoción 6 meses gratis de HBO Max (contenido exclusivo) y una vez que su servicio sea instalado recibirá una liga para la activación del mismo.`;
+                textoCondiciones = `Finalizados los 6 meses gratis, el costo de HBO Max será de $119 adicionales, que verá reflejados en su Recibo Telmex.`;
             } else if (promocion === "F1 TV") {
-                textoPromocion = `Le confirmo que el servicio solicitado incluye una promoción 6 meses gratis de F1 TV Pro (acceso a todas las carreras en vivo) y una vez instalado el servicio recibirá una liga para la activación.`;
-                textoCondiciones = `Al terminar los 6 meses gratis, el costo de F1 TV será de $119 mensuales adicionales, reflejados en su recibo Telmex.`;
+                textoPromocion = `El servicio solicitado incluye una promoción 6 meses gratis de F1 TV Pro (acceso a todas las carreras en vivo) y una vez instalado el servicio recibirá una liga para la activación.`;
+                textoCondiciones = `Finalizados los 6 meses gratis, el costo de F1 TV será de $119 mensuales adicionales, reflejados en su recibo Telmex.`;
             } else {
-                textoPromocion = `Le confirmo que el servicio solicitado incluye una promoción de 6 meses gratis de ${promocion} (beneficio exclusivo) y recibirá una liga para su activación.`;
-                textoCondiciones = `Posterior a los 6 meses, el costo del servicio adicional será de acuerdo a la tarifa vigente de ${promocion}.`;
+                textoPromocion = `El servicio solicitado incluye una promoción de 6 meses gratis de ${promocion} (beneficio exclusivo) y recibirá una liga para su activación.`;
+                textoCondiciones = `Finalizados los 6 meses, el costo del servicio adicional será de acuerdo a la tarifa vigente de ${promocion}.`;
             }
             
             // Texto de domiciliación con beneficios si aplica
@@ -680,70 +680,70 @@
             // Base del guion según tipo de venta (se mantiene la estructura anterior con los textos actualizados)
             if (tipo === "NUEVO RESIDENCIAL") {
                 let steps = [
-                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Contratación", speech: `El motivo de la llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
+                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, hablo con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, le llamo de 105RM Promotor Autorizado Infinitum.` },
+                    { text: "2. Aviso de Privacidad", speech: `Por medidas de seguridad y validación la llamada está siendo grabada.` },
+                    { text: "3. Confirmación de Contratación", speech: `La llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
                     { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga. (5 pantallas)` },
                     { text: "5. Promoción Incluida", speech: textoPromocion },
                     { text: "6. Condiciones de la Promoción", speech: textoCondiciones },
-                    { text: "7. Gastos de Instalación", speech: `El paquete (por ser cliente nuevo) tiene un gasto de instalación de $1,600, el cual puede EFECTUAR CON UN PAGO inicial de $400 y posteriormente en cada recibo le llegará un cargo de $100 durante 12 meses.` },
-                    { text: "8. Opciones de Pago Inicial", speech: `En el momento en que generó su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En establecimientos autorizados de pago como Centros de atención TELMEX, TELCEL, SAMBORS, OXXO, BBVA, IMBURSA, entre otros.` }
+                    { text: "7. Gastos de Instalación", speech: `El paquete tiene un gasto de instalación de $1,600, el cual puede EFECTUAR CON UN PAGO inicial de $400 y posteriormente en cada recibo le llegará un cargo de $100 durante 12 meses.` },
+                    { text: "8. Opciones de Pago Inicial", speech: `Al realizar su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En tiendas TELMEX, OXXO y aplicación MI TELMEX.` }
                 ];
                 steps.push({ text: "9. Domiciliación y Beneficios", speech: textoDomiciliacion });
                 steps.push(
-                    { text: "10. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "11. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "12. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "13. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
+                    { text: "10. Confirmación de Domicilio", speech: `Me confirma que el domicilio donde el servicio será instalado es: ${direccion}. Confirma también el correo electrónico ${correo} y el teléfono ${celular}.` },
+                    { text: "11. Seguridad en el Pago", speech: `Cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
+                    { text: "12. Validación de Transparencia", speech: `¿El promotor le realizó algún cobro por hacer la solicitud del servicio?` },
+                    { text: "13. Seguimiento", speech: `En las próximas horas recibirá un SMS y correo electrónico donde le notificaremos el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
                     { text: "14. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
                 );
                 return steps;
             } else if (tipo === "PORTABILIDAD / AIR") {
                 let steps = [
-                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Contratación", speech: `El motivo de la llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
+                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, hablo con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, le llamo de 105RM Promotor Autorizado Infinitum.` },
+                    { text: "2. Aviso de Privacidad", speech: `Por medidas de seguridad y validación la llamada está siendo grabada.` },
+                    { text: "3. Confirmación de Contratación", speech: `La llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
                     { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga.` },
                     { text: "5. Promoción Incluida", speech: textoPromocion },
                     { text: "6. Condiciones de la Promoción", speech: textoCondiciones },
-                    { text: "7. Beneficios Portabilidad", speech: `Le confirmo que los gastos de instalación serán totalmente gratis y el paquete le aplica para una bonificación en los meses 4, 8 y 12 de su facturación (Totalmente gratis).` }
+                    { text: "7. Beneficios Portabilidad", speech: `Le confirmo que los gastos de instalación serán totalmente gratis y el paquete le aplica para una bonificación en los meses 4, 8 y 12 de su facturación (Totalmente gratis). Le informo que la permanencia mínima con el servicio es de 4 meses.` }
                 ];
                 steps.push({ text: "8. Domiciliación y Beneficios", speech: textoDomiciliacion });
                 steps.push(
-                    { text: "9. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "10. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "11. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "12. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
+                    { text: "9. Confirmación de Domicilio", speech: `Me confirma que el domicilio donde el servicio será instalado es: ${direccion}. Confirma también el correo electrónico ${correo} y el teléfono ${celular}.` },
+                    { text: "10. Seguridad en el Pago", speech: `Cualquier pago por el servicio solicitado se deberá realizar únicamente en tiendas Telmex, Centros de Atención Telmex y sus medios de cobro autorizados.` },
+                    { text: "11. Validación de Transparencia", speech: `El promotor le realizó algún cobro por hacer la solicitud del servicio?` },
+                    { text: "12. Seguimiento", speech: `En las próximas horas recibirá un SMS y correo electrónico donde le notificaremos el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
                     { text: "13. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
                 );
                 return steps;
             } else if (tipo === "NUEVO NEGOCIO") {
                 let steps = [
-                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Privacidad", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Contratación", speech: `El motivo de la llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
+                    { text: "1. Saludo e Identificación", speech: `Buenas tardes, hablo con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, le llamo de 105RM Promotor Autorizado Infinitum.` },
+                    { text: "2. Aviso de Privacidad", speech: `Por medidas de seguridad y validación la llamada está siendo grabada.` },
+                    { text: "3. Confirmación de Contratación", speech: `La llamada es para CONFIRMAR LA CONTRATACIÓN DEL SERVICIO (${paquete} de hasta ${megas} Megas más línea ilimitada, con un costo mensual de $${costo}), ¿es correcto?` },
                     { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga. (5 pantallas)` },
                     { text: "5. Giro del Negocio", speech: `Me indica por favor el giro de su negocio.` },
                     { text: "6. Promoción Incluida", speech: textoPromocion },
                     { text: "7. Condiciones de la Promoción", speech: textoCondiciones },
                     { text: "8. Gastos de Instalación", speech: `El paquete tiene un gasto de instalación de $1,600, el cual puede EFECTUAR CON UN PAGO inicial de $400 y posteriormente en cada recibo telefónico le llegará un cargo de $100 durante 12 meses.` },
-                    { text: "9. Opciones de Pago Inicial", speech: `En el momento en que generó su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En establecimientos autorizados de pago como Centros de atención TELMEX, TELCEL, SAMBORS, OXXO, BBVA, IMBURSA, entre otros.` }
+                    { text: "9. Opciones de Pago Inicial", speech: `Al realizar su solicitud usted recibió un correo electrónico para que pueda realizar el pago inicial bien sea: a. En línea pagando con tarjeta de crédito o débito, b. En tiendas TELMEX, OXXO y aplicación MI TELMEX.` }
                 ];
                 steps.push({ text: "10. Domiciliación y Beneficios", speech: textoDomiciliacion });
                 steps.push(
-                    { text: "11. Confirmación de Domicilio", speech: `Me confirma la dirección donde el servicio será instalado. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "12. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "13. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "14. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos notificando todo el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
+                    { text: "11. Confirmación de Domicilio", speech: `Me confirma que el domicilio donde el servicio será instalado es: ${direccion}. Confirma también el correo electrónico ${correo} y el teléfono ${celular}.` },
+                    { text: "12. Seguridad en el Pago", speech: `Cualquier pago por el servicio solicitado se deberá realizar únicamente en las tiendas Telmex y sus medios de cobro autorizados.` },
+                    { text: "13. Validación de Transparencia", speech: `¿El promotor le realizó algún cobro por hacer la solicitud del servicio?` },
+                    { text: "14. Seguimiento", speech: `En las próximas horas recibirá un SMS y correo electrónico donde le notificaremos el seguimiento para la instalación de su servicio y confirmando el paquete contratado.` },
                     { text: "15. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
                 );
                 return steps;
             } else { // UPSELL
                 let steps = [
-                    { text: "1. Saludo", speech: `Buenas tardes, me comunico con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, me comunico de parte de 105RM Promotor Autorizado Infinitum.` },
-                    { text: "2. Aviso de Grabación", speech: `Le notifico ${tratamiento} ${primerNombre} que por medidas de seguridad y validación la llamada está siendo grabada.` },
-                    { text: "3. Confirmación de Cambio", speech: `El motivo de la llamada es para confirmar el cambio de megas en su paquete infinitum. Usted cuenta con un paquete de hasta ${megas} Megas, ¿es correcto?` },
-                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga.` }
+                    { text: "1. Saludo", speech: `Buenas tardes, hablo con ${tratamientoLargo} ${nombreCompleto}. Mi nombre es ${ejecutivo}, le llamo de 105RM Promotor Autorizado Infinitum.` },
+                    { text: "2. Aviso de Grabación", speech: `Por medidas de seguridad y validación la llamada está siendo grabada.` },
+                    { text: "3. Confirmación de Cambio", speech: `La llamada es para confirmar el cambio de megas en su paquete infinitum. Usted cuenta con un paquete de hasta ${megas} Megas, ¿es correcto?` },
+                    { text: "4. Información de Claro Video", speech: `Le informo que el servicio de Claro Video es sin costo y no incluye canales de Televisión, ni abierta ni de paga. (plataforma de entretenimiento)` }
                 ];
                 if (data.domiciliacionBeneficio) {
                     steps.push({ text: "5. Domiciliación y Beneficios", speech: textoDomiciliacion });
@@ -751,10 +751,10 @@
                     steps.push({ text: "5. Domiciliación", speech: `Tiene la opción de poder domiciliar el servicio para que los pagos se realicen de manera automática y segura y si desea activarlo lo puede hacer en la aplicación MI TELMEX.` });
                 }
                 steps.push(
-                    { text: "6. Confirmación de Domicilio", speech: `Me confirma la dirección donde se encuentra instalado el servicio. ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
-                    { text: "7. Seguridad en el Pago", speech: `Para su tranquilidad le informamos que cualquier pago por el servicio solicitado se deberá realizar exclusivamente por los canales oficiales de Telmex, Centros de Atención Telmex, telmex.com, App Telmex y sus medios de cobro autorizados.` },
-                    { text: "8. Validación de Transparencia", speech: `Me podría confirmar que no le ha sido solicitado pago alguno por parte del promotor que levantó su solicitud.` },
-                    { text: "9. Seguimiento", speech: `Le comento que en las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos confirmando el incremento de velocidad en su paquete infinitum.` },
+                    { text: "6. Confirmación de Domicilio", speech: `Me confirma que el domicilio donde se encuentra instalado el servicio es: ${direccion}. Verifica el correo electrónico ${correo} y el teléfono ${celular}.` },
+                    { text: "7. Seguridad en el Pago", speech: `Cualquier pago por el servicio solicitado se deberá realizar únicamente en tiendas Telmex y sus medios de cobro autorizados.` },
+                    { text: "8. Validación de Transparencia", speech: `¿El promotor le realizó algún cobro por hacer la solicitud del servicio?` },
+                    { text: "9. Seguimiento", speech: `En las próximas horas recibirá un SMS y correo electrónico a través de los cuales le estaremos confirmando el incremento de velocidad en su paquete infinitum.` },
                     { text: "10. Cierre y Dudas", speech: `En caso de que tenga alguna duda posterior a esta llamada ponemos a su disposición el 800 123 22 22. Le agradezco su atención, le atendió ${ejecutivo} de parte de 105RM Promotor Autorizado Infinitum. ¡Que tenga un excelente día!` }
                 );
                 return steps;
